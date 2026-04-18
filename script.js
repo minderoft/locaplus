@@ -917,9 +917,11 @@ async function initiatePaystackPayment() { // FLUX DE PAIEMENT CORRIGÉ ET SÉCU
     };
     const cat = App.selectedCategory;
     if (cat === 'immo') {
-      listingData.details.surface = document.getElementById('pub-immo-surface').value;
-      listingData.details.pieces = document.getElementById('pub-immo-pieces').value;
-      listingData.details.etage = document.getElementById('pub-immo-etage').value;
+      listingData.details = {
+        surface: document.getElementById('pub-immo-surface')?.value,
+        pieces: document.getElementById('pub-immo-pieces')?.value,
+        etage: document.getElementById('pub-immo-etage')?.value
+      };
     }
     // (Ajouter ici la collecte pour 'veh' et 'tech' si nécessaire)
 

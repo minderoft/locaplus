@@ -21,7 +21,7 @@ if ($event && isset($event->event) && $event->event === 'charge.success') {
 
     // 4. Mettre à jour la base de données
     // On suppose que la référence a été préalablement stockée dans la table `listings`
-    // lors de sa création avec un statut 'pending'.
+    // lors de sa création avec un statut 'active' mais sans 'paid_at'.
     if ($db_connected) {
         try {
             // On cherche l'annonce avec la référence de paiement et le statut 'pending'

@@ -45,7 +45,7 @@ if ($transaction && $transaction['status'] && $transaction['data']['status'] ===
     // 2. Le paiement est réussi. Mettre à jour la base de données.
     $listingData = $_SESSION['pending_listing'] ?? null;
 
-    if ($db_connected && $listingData) {
+    if ($db_connected && $listingData) { // Assurez-vous que la DB est connectée et que les données existent
         try {
             // Validation côté serveur
             if (empty($listingData['title']) || empty($listingData['price']) || empty($listingData['category'])) {
