@@ -60,7 +60,7 @@ $postData = json_decode(file_get_contents('php://input'), true);
 
 // --- CORRECTIONS DE SÉCURITÉ ET DE LOGIQUE APPLIQUÉES ---
 
-// 1. Validation des données entrantes (email et catégorie)
+// 1. Validation des données entrantes (email et catégorie) depuis le corps JSON de la requête
 $email = filter_var($postData['email'] ?? null, FILTER_VALIDATE_EMAIL);
 $category = isset($postData['category']) ? trim($postData['category']) : null;
 
@@ -70,10 +70,10 @@ if (!$email || !$category) {
     exit;
 }
 
-// 2. Logique de tarification sécurisée côté serveur
+// 2. Logique de tarification stricte et sécurisée côté serveur
 $amount = 0;
 switch ($category) {
-    // Les clés 'immo', 'btp', etc. correspondent à ce qui est envoyé par le script.js
+    // Les clés correspondent à ce qui est envoyé par le script.js
     case 'immo':
         $amount = 5000;
         break;
@@ -85,13 +85,13 @@ switch ($category) {
         $amount = 3000;
         break;
     default:
-        // Si une catégorie inconnue est envoyée, on bloque la transaction.
+        // Si une catégorie inconnue est envoyée, on bloque la transaction pour la sécurité.
         http_response_code(400); // Bad Request
         echo json_encode(['status' => false, 'message' => 'Catégorie de produit invalide.']);
         exit;
 }
 
-// 3. Initialisation de la transaction avec le montant correct (en kobo) et l'URL de production
+// 3. Initialisation de la transaction avec le montant converti (x100) et l'URL de production
 $response = initializePaystackTransaction($email, $amount * 100, 'https://locaplus-production.up.railway.app/verify_transaction.php');
 
 echo json_encode($response);
