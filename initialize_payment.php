@@ -1,6 +1,8 @@
 <?php
 // c:\xampp\htdocs\locaplus\initialize_payment.php
 
+header('Content-Type: application/json');
+
 require_once 'security_init.php'; // Initialise la session et les en-têtes de sécurité
 
 // Vérification critique de l'extension cURL
@@ -11,8 +13,6 @@ if (!extension_loaded('curl')) {
 }
 
 require_once 'config_paystack.php';
-
-header('Content-Type: application/json');
 
 /**
  * Initialise une transaction Paystack en utilisant cURL.
@@ -26,18 +26,11 @@ function initializePaystackTransaction($email, $amount, $callback_url) {
     $url = "https://api.paystack.co/transaction/initialize";
 
     $fields = [
-        'email' => $email,
-        'amount' => $amount,
-        'callback_url' => $callback_url,
-        'metadata' => [
-            'custom_fields' => [
-                [
-                    'display_name' => "Plugin",
-                    'variable_name' => "plugin",
-                    'value' => "LocaPlus-Custom-Integration"
-                ]
-            ]
-        ]
+        'email'        => $email,
+        'amount'       => $amount,
+        'callback_url' => $callback_url
+        // Vous pouvez ajouter des métadonnées ici si nécessaire
+        // 'metadata' => ['custom_fields' => [['display_name' => "Annonce", 'variable_name' => "listing_title", 'value' => $titleFromForm]]]
     ];
 
     $fields_string = http_build_query($fields);
@@ -68,11 +61,11 @@ $postData = json_decode(file_get_contents('php://input'), true);
 // --- CORRECTIONS DE SÉCURITÉ ET DE LOGIQUE APPLIQUÉES ---
 
 // 1. Validation des données entrantes (email et catégorie)
-$email = filter_var($postData['email'] ?? '', FILTER_VALIDATE_EMAIL);
-$category = $postData['category'] ?? null;
+$email = filter_var($postData['email'] ?? null, FILTER_VALIDATE_EMAIL);
+$category = isset($postData['category']) ? trim($postData['category']) : null;
 
 if (!$email || !$category) {
-    http_response_code(400); // Bad Request
+    http_response_code(400);
     echo json_encode(['status' => false, 'message' => 'Données de paiement invalides.']);
     exit;
 }
@@ -80,6 +73,7 @@ if (!$email || !$category) {
 // 2. Logique de tarification sécurisée côté serveur
 $amount = 0;
 switch ($category) {
+    // Les clés 'immo', 'btp', etc. correspondent à ce qui est envoyé par le script.js
     case 'immo':
         $amount = 5000;
         break;
@@ -91,6 +85,7 @@ switch ($category) {
         $amount = 3000;
         break;
     default:
+        // Si une catégorie inconnue est envoyée, on bloque la transaction.
         http_response_code(400); // Bad Request
         echo json_encode(['status' => false, 'message' => 'Catégorie de produit invalide.']);
         exit;
