@@ -1,6 +1,9 @@
 <?php
 // c:\xampp\htdocs\locaplus\db_connect.php
 
+// Désactive l'affichage des erreurs en production pour ne pas exposer de détails sensibles.
+ini_set('display_errors', getenv('RAILWAY_ENVIRONMENT') === 'production' ? '0' : '1');
+
 // Variable pour suivre l'état de la connexion
 $db_connected = false;
 

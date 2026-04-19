@@ -4,6 +4,12 @@
 require_once 'config_paystack.php';
 require_once 'db_connect.php';
 
+// 0. S'assurer que la requête est de type POST
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    http_response_code(405); // Method Not Allowed
+    exit();
+}
+
 // 1. Vérifier la signature du Webhook pour la sécurité
 $input = @file_get_contents("php://input");
 if (!isset($_SERVER['HTTP_X_PAYSTACK_SIGNATURE']) || $_SERVER['HTTP_X_PAYSTACK_SIGNATURE'] !== hash_hmac('sha512', $input, PAYSTACK_SECRET_KEY)) {

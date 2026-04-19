@@ -7,8 +7,8 @@
 
 // Clé secrète (pour le backend PHP)
 // Utilise la variable d'environnement PAYSTACK_SECRET_KEY si elle existe, sinon une clé de test locale.
-define('PAYSTACK_SECRET_KEY', getenv('PAYSTACK_SECRET_KEY') ?: 'sk_test_VOTRE_CLE_SECRETE_LOCALE_ICI');
+define('PAYSTACK_SECRET_KEY', getenv('PAYSTACK_SECRET_KEY') ?: '');
 
 // Clé publique (pour le frontend JavaScript)
 // Utilise la variable d'environnement PAYSTACK_PUBLIC_KEY si elle existe, sinon une clé de test locale.
-define('PAYSTACK_PUBLIC_KEY', getenv('PAYSTACK_PUBLIC_KEY') ?: 'pk_test_VOTRE_CLE_PUBLIQUE_LOCALE_ICI');
+define('PAYSTACK_PUBLIC_KEY', getenv('PAYSTACK_PUBLIC_KEY') ?: 'sk_test_33cc5e16d33b34cd323433378b8ca7b16168cb4b');

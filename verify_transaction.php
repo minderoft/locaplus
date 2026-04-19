@@ -1,6 +1,8 @@
 <?php
 // c:\xampp\htdocs\locaplus\verify_transaction.php
 
+require_once 'security_init.php'; // Inclut la configuration de session sécurisée
+
 // Vérification critique de l'extension cURL
 if (!extension_loaded('curl')) {
     die("<div style='font-family: sans-serif; text-align: center; padding: 2rem; background: #fff0f0; border: 1px solid #d9534f; margin: 2rem;'>
@@ -10,13 +12,19 @@ if (!extension_loaded('curl')) {
 }
 require_once 'config_paystack.php'; // Inclusion de la clé secrète
 require_once 'db_connect.php';
-
-session_start(); // Pour récupérer les données de l'annonce
-
+// La session est déjà démarrée par security_init.php
 $reference = $_GET['reference'] ?? null;
+$csrf_token = $_GET['csrf_token'] ?? null;
 
 if (!$reference) {
     die("Aucune référence de transaction fournie.");
+}
+
+// Protection CSRF : Vérifier que le token reçu correspond à celui en session
+if (!$csrf_token || !isset($_SESSION['csrf_token']) || !hash_equals($_SESSION['csrf_token'], $csrf_token)) {
+    error_log("Échec de la validation CSRF pour la référence: " . $reference);
+    header('Location: locaplus.php?payment_status=error&message=csrf_failed');
+    exit();
 }
 
 // 1. Vérifier la transaction auprès de Paystack

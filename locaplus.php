@@ -8,6 +8,12 @@ if (!extension_loaded('pdo_mysql')) {
 }
 require_once 'db_connect.php';
 
+// Génération et stockage du token CSRF s'il n'existe pas
+if (empty($_SESSION['csrf_token'])) {
+    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+}
+$csrf_token = $_SESSION['csrf_token'];
+
 // Get current listing type from URL, default to 'immo'
 $currentListingType = $_GET['type'] ?? 'immo';
 $searchQuery = $_GET['q'] ?? '';
@@ -1048,7 +1054,8 @@ try {
   const phpData = <?php echo json_encode([
       'currentListingType' => $currentListingType,
       'allListings' => $allListingsFromDB,
-      'paystackPublicKey' => defined('PAYSTACK_PUBLIC_KEY') ? PAYSTACK_PUBLIC_KEY : ''
+      'paystackPublicKey' => defined('PAYSTACK_PUBLIC_KEY') ? PAYSTACK_PUBLIC_KEY : '',
+      'csrfToken' => $csrf_token
   ]); ?>;
 </script>
 

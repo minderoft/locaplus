@@ -116,7 +116,8 @@ const App = {
   pendingAction: null,
   dashTab: 'annonces',
   allListings: [], // Sera rempli par les données PHP
-  paystackPublicKey: '' // Sera rempli par la clé publique PHP
+  paystackPublicKey: '', // Sera rempli par la clé publique PHP
+  csrfToken: '' // Sera rempli par le token CSRF de PHP
 };
 
 
@@ -950,8 +951,8 @@ async function initiatePaystackPayment() { // FLUX DE PAIEMENT CORRIGÉ ET SÉCU
       currency: 'XOF',
       channels: ['card', 'mobile_money', 'ussd'], // Canaux pour CB, Orange, MTN, Moov, Wave
       callback: function(response) {
-        // Le paiement est initié, on redirige vers notre script de vérification sécurisé côté serveur.
-        window.location.href = 'verify_transaction.php?reference=' + response.reference;
+        // Le paiement est initié, on redirige vers notre script de vérification sécurisé côté serveur, en incluant le token CSRF.
+        window.location.href = `verify_transaction.php?reference=${response.reference}&csrf_token=${App.csrfToken}`;
       },
       onClose: function() {
         toast('Paiement annulé.', 'info');
@@ -1139,6 +1140,7 @@ document.addEventListener('DOMContentLoaded', () => {
   App.currentSearchTab = phpData.currentListingType || 'immo';
   App.allListings = phpData.allListings || [];
   App.paystackPublicKey = phpData.paystackPublicKey;
+  App.csrfToken = phpData.csrfToken; // Récupère le token CSRF
 
   // Initial setup for search input placeholder based on current tab
   const ph = { immo:'Appartement 3P à Cocody...', veh:'Toyota Prado 2022 location...', btp:'Pelle hydraulique 20T...', tech:'Électricien qualifié...' };
