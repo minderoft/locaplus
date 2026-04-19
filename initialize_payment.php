@@ -1,6 +1,8 @@
 <?php
 // c:\xampp\htdocs\locaplus\initialize_payment.php
 
+require_once 'security_init.php'; // Initialise la session et les en-têtes de sécurité
+
 // Vérification critique de l'extension cURL
 if (!extension_loaded('curl')) {
     http_response_code(500);
@@ -62,6 +64,39 @@ function initializePaystackTransaction($email, $amount, $callback_url) {
 }
 
 $postData = json_decode(file_get_contents('php://input'), true);
-$response = initializePaystackTransaction($postData['email'], $postData['amount'], 'http://localhost/locaplus/verify_transaction.php');
+
+// --- CORRECTIONS DE SÉCURITÉ ET DE LOGIQUE APPLIQUÉES ---
+
+// 1. Validation des données entrantes (email et catégorie)
+$email = filter_var($postData['email'] ?? '', FILTER_VALIDATE_EMAIL);
+$category = $postData['category'] ?? null;
+
+if (!$email || !$category) {
+    http_response_code(400); // Bad Request
+    echo json_encode(['status' => false, 'message' => 'Données de paiement invalides.']);
+    exit;
+}
+
+// 2. Logique de tarification sécurisée côté serveur
+$amount = 0;
+switch ($category) {
+    case 'immo':
+        $amount = 5000;
+        break;
+    case 'btp':
+    case 'veh':
+        $amount = 4000;
+        break;
+    case 'tech':
+        $amount = 3000;
+        break;
+    default:
+        http_response_code(400); // Bad Request
+        echo json_encode(['status' => false, 'message' => 'Catégorie de produit invalide.']);
+        exit;
+}
+
+// 3. Initialisation de la transaction avec le montant correct (en kobo) et l'URL de production
+$response = initializePaystackTransaction($email, $amount * 100, 'https://locaplus-production.up.railway.app/verify_transaction.php');
 
 echo json_encode($response);
