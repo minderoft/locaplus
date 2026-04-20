@@ -81,14 +81,18 @@ function initializePaystackTransaction($email, $amount, $callback_url) {
 // --- LOGIQUE DE PAIEMENT SÉCURISÉE ---
 
 // 1. Récupérer les données envoyées en POST (depuis le formulaire de paiement)
-// Note: Le JavaScript doit maintenant soumettre un formulaire ou rediriger vers cette page avec les données.
-// Pour cet exemple, nous supposons que les données sont envoyées via POST.
-$postData = json_decode(file_get_contents('php://input'), true);
+// Prioriser $_POST pour les soumissions de formulaire HTML standard.
+if (!empty($_POST)) {
+    $requestData = $_POST;
+} else {
+    // Fallback pour les requêtes avec un corps JSON (ex: fetch avec Content-Type: application/json)
+    $requestData = json_decode(file_get_contents('php://input'), true);
+}
 
 // 2. Validation stricte des données entrantes
 // Utilisation de l'opérateur de coalescence nulle pour éviter les warnings si les clés n'existent pas.
-$email = filter_var($postData['email'] ?? '', FILTER_VALIDATE_EMAIL);
-$category = trim($postData['category'] ?? '');
+$email = filter_var($requestData['email'] ?? '', FILTER_VALIDATE_EMAIL);
+$category = trim($requestData['category'] ?? '');
 
 if (!$email || !$category) {
     http_response_code(400);
