@@ -86,8 +86,9 @@ function initializePaystackTransaction($email, $amount, $callback_url) {
 $postData = json_decode(file_get_contents('php://input'), true);
 
 // 2. Validation stricte des données entrantes
-$email = filter_var($postData['email'] ?? null, FILTER_VALIDATE_EMAIL);
-$category = isset($postData['category']) ? trim($postData['category']) : null;
+// Utilisation de l'opérateur de coalescence nulle pour éviter les warnings si les clés n'existent pas.
+$email = filter_var($postData['email'] ?? '', FILTER_VALIDATE_EMAIL);
+$category = trim($postData['category'] ?? '');
 
 if (!$email || !$category) {
     http_response_code(400);

@@ -891,7 +891,7 @@ function removePhoto(idx) {
 }
 
 // ─── PAYSTACK PAYMENT ─────────────────────────────────
-async function initiatePaystackPayment() { // FLUX DE PAIEMENT CORRIGÉ ET SÉCURISÉ
+async function initiatePaystackPayment() { // NOUVEAU FLUX DE PAIEMENT CÔTÉ SERVEUR
   if (!Session.isAuthenticated()) {
     toast('Connectez-vous pour payer', 'error');
     return;
@@ -901,65 +901,45 @@ async function initiatePaystackPayment() { // FLUX DE PAIEMENT CORRIGÉ ET SÉCU
   setLoading(btn, true);
 
   try {
-    // Étape 1 : Collecter les données du formulaire
-    const listingData = {
-      user_id: session.id,
-      title: document.getElementById('pub-titre').value,
-      description: document.getElementById('pub-desc').value,
-      price: document.getElementById('pub-prix').value,
-      location: `${document.getElementById('pub-ville').value}, ${document.getElementById('pub-commune').value}`,
-      category: App.selectedCategory,
-      subcat: document.getElementById('pub-subcat').value,
-      badge: document.getElementById('pub-offre-type').value,
-      contact: document.getElementById('pub-contact').value,
-      plan: App.selectedPlan.plan,
-      photos: App.uploadedPhotos,
-      details: {}
-    };
-    const cat = App.selectedCategory;
-    if (cat === 'immo') {
-      listingData.details = {
-        surface: document.getElementById('pub-immo-surface')?.value,
-        pieces: document.getElementById('pub-immo-pieces')?.value,
-        etage: document.getElementById('pub-immo-etage')?.value
-      };
-    }
-    // (Ajouter ici la collecte pour 'veh' et 'tech' si nécessaire)
-
-    // Étape 2 : Sauvegarder les données en session via une requête au serveur
-    const sessionResponse = await fetch('save_listing_to_session.php', {
+    // Étape 1 : Sauvegarder les données de l'annonce en session PHP avant de rediriger vers le paiement.
+    // Cela garantit que si le paiement réussit, nous aurons les données pour créer l'annonce.
+    const listingData = collectListingData(); // Fonction pour rassembler les données du formulaire
+    const saveResponse = await fetch('save_listing_to_session.php', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(listingData)
     });
-    const sessionResult = await sessionResponse.json();
+    const saveResult = await saveResponse.json();
 
-    if (!sessionResult.success) {
-      throw new Error(sessionResult.message || 'Erreur lors de la sauvegarde de l\'annonce.');
+    if (!saveResult.success) {
+      throw new Error(saveResult.message || 'Erreur lors de la sauvegarde de l\'annonce avant paiement.');
     }
 
-    // Étape 3 : Si la sauvegarde a réussi, ouvrir la fenêtre de paiement Paystack
-    const amount = App.selectedPlan.price * 100; // en kobo/centimes
-    const email = session.email;
-    const ref = 'LP_' + Security.generateToken().substring(0, 20).toUpperCase();
+    // Étape 2 : Créer un formulaire dynamique en mémoire pour envoyer les données à initialize_payment.php.
+    // Cette méthode est plus propre qu'une redirection avec des paramètres GET.
+    const form = document.createElement('form');
+    form.method = 'POST';
+    form.action = 'initialize_payment.php'; // Le script PHP qui initie la redirection vers Paystack
+    form.style.display = 'none'; // Le formulaire est invisible
 
-    const handler = PaystackPop.setup({
-      key: App.paystackPublicKey, // Utilise la clé publique chargée depuis PHP
-      email: email,
-      amount: amount,
-      ref: ref,
-      currency: 'XOF',
-      channels: ['card', 'mobile_money', 'ussd'], // Canaux pour CB, Orange, MTN, Moov, Wave
-      callback: function(response) {
-        // Le paiement est initié, on redirige vers notre script de vérification sécurisé côté serveur, en incluant le token CSRF.
-        window.location.href = `verify_transaction.php?reference=${response.reference}&csrf_token=${App.csrfToken}`;
-      },
-      onClose: function() {
-        toast('Paiement annulé.', 'info');
-        setLoading(btn, false); // Réactiver le bouton si l'utilisateur ferme la fenêtre
-      }
-    });
-    handler.openIframe();
+    // Créer les champs (inputs) pour le formulaire
+    const data = {
+      email: session.email,
+      category: App.selectedCategory, // La catégorie est utilisée pour déterminer le prix côté serveur
+      csrf_token: App.csrfToken // Pour une sécurité renforcée
+    };
+
+    for (const key in data) {
+      const input = document.createElement('input');
+      input.type = 'hidden';
+      input.name = key;
+      input.value = data[key];
+      form.appendChild(input);
+    }
+
+    // Ajouter le formulaire à la page et le soumettre pour déclencher la redirection
+    document.body.appendChild(form);
+    form.submit();
 
   } catch (error) {
     console.error('ERREUR FLUX DE PAIEMENT:', error);
@@ -968,6 +948,35 @@ async function initiatePaystackPayment() { // FLUX DE PAIEMENT CORRIGÉ ET SÉCU
   }
 }
 
+/**
+ * Rassemble toutes les données du formulaire de publication dans un objet.
+ * @returns {object} Les données de l'annonce.
+ */
+function collectListingData() {
+  const session = Session.get();
+  const listingData = {
+    user_id: session.id,
+    title: document.getElementById('pub-titre').value,
+    description: document.getElementById('pub-desc').value,
+    price: document.getElementById('pub-prix').value,
+    location: `${document.getElementById('pub-ville').value}, ${document.getElementById('pub-commune').value}`,
+    category: App.selectedCategory,
+    subcat: document.getElementById('pub-subcat').value,
+    badge: document.getElementById('pub-offre-type').value,
+    contact: document.getElementById('pub-contact').value,
+    plan: App.selectedPlan.plan,
+    photos: App.uploadedPhotos,
+    details: {} // Pour les champs spécifiques à la catégorie
+  };
+
+  // Exemple pour la catégorie 'immo'
+  if (listingData.category === 'immo') {
+    listingData.details.surface = document.getElementById('pub-immo-surface')?.value;
+    listingData.details.pieces = document.getElementById('pub-immo-pieces')?.value;
+    listingData.details.etage = document.getElementById('pub-immo-etage')?.value;
+  }
+  return listingData;
+}
 // ─── CONFETTI ─────────────────────────────────────────
 function launchConfetti() {
   const container = document.getElementById('confetti');

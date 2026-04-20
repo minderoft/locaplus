@@ -39,8 +39,10 @@ if (!isset($_SESSION['session_regenerated'])) {
 // Politique de sécurité de contenu (CSP)
 // Réduit le risque d'attaques XSS en spécifiant les sources de contenu autorisées.
 // 'unsafe-inline' a été retiré pour les scripts, ce qui est une bonne pratique.
-// Vous devrez peut-être déplacer votre JS inline dans des fichiers .js séparés.
-header("Content-Security-Policy: default-src 'self'; script-src 'self' https://js.paystack.co; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob:; connect-src 'self' https://api.paystack.co; frame-src https://js.paystack.co;");
+// Vous devrez peut-être déplacer votre JS inline dans des fichiers .js séparés. 
+// AJOUT: `form-action` inclut `https://checkout.paystack.com` pour autoriser la soumission du formulaire de paiement vers Paystack.
+// C'est essentiel pour que la redirection fonctionne sans être bloquée par le navigateur.
+header("Content-Security-Policy: default-src 'self'; script-src 'self' https://js.paystack.co; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob:; connect-src 'self' https://api.paystack.co; frame-src https://js.paystack.co; form-action 'self' https://checkout.paystack.com;");
 
 // Empêche le navigateur d'interpréter des fichiers avec un type MIME incorrect.
 header("X-Content-Type-Options: nosniff");
