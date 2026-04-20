@@ -48,7 +48,31 @@ try {
             $whereClauses[] = "(title LIKE :searchQuery OR location LIKE :searchQuery OR description LIKE :searchQuery)";
             $params[':searchQuery'] = '%' . $searchQuery . '%';
         }
-        // ... (autres logiques de filtre ici) ...
+        if (!empty($filterType)) {
+            $whereClauses[] = "subcat = :filterType";
+            $params[':filterType'] = $filterType;
+        }
+        if (!empty($filterVille)) {
+            $whereClauses[] = "location LIKE :filterVille";
+            $params[':filterVille'] = '%' . $filterVille . '%';
+        }
+        if (!empty($filterOffre)) {
+            $whereClauses[] = "badge = :filterOffre";
+            $params[':filterOffre'] = $filterOffre;
+        }
+        // CORRECTION: Logique de filtrage par budget améliorée
+        if (!empty($filterBudget)) {
+            if (strpos($filterBudget, '+') !== false) {
+                $min = (int)str_replace('+', '', $filterBudget);
+                $whereClauses[] = "price >= :minBudget";
+                $params[':minBudget'] = $min * 1000;
+            } else {
+                list($min, $max) = explode('-', $filterBudget);
+                $whereClauses[] = "price BETWEEN :minBudget AND :maxBudget";
+                $params[':minBudget'] = (int)$min * 1000;
+                $params[':maxBudget'] = (int)$max * 1000;
+            }
+        }
 
         $sql = "SELECT * FROM listings";
         if (!empty($whereClauses)) {
@@ -70,6 +94,9 @@ try {
         $count = $stmtCount->fetchColumn();
         $activeListingsCount = ($count > 1000) ? number_format($count, 0, ',', ' ') . '+' : $count;
     }
+    // Si la connexion échoue, $db_connected est false et le bloc ci-dessus est ignoré.
+    // $displayListings et $allListingsFromDB restent des tableaux vides.
+    // Le message d'erreur sera affiché dans le HTML.
 
 } catch (PDOException $e) {
     error_log("Error fetching listings: " . $e->getMessage());
