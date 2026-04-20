@@ -6,6 +6,7 @@ ini_set('display_errors', getenv('RAILWAY_ENVIRONMENT') === 'production' ? '0' :
 
 // Variable pour suivre l'état de la connexion
 $db_connected = false;
+$db_error_message = ''; // Nouvelle variable pour stocker le message d'erreur détaillé
 
 // Configuration pour RAILWAY (utilise les variables d'environnement standard)
 $host = getenv('MYSQLHOST') ?: '127.0.0.1'; // Fallback sur localhost
@@ -19,9 +20,9 @@ try {
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     $db_connected = true; // La connexion a réussi
 } catch (PDOException $e) {
-    // En production, il est préférable de ne pas afficher les détails de l'erreur à l'utilisateur.
+    $db_error_message = $e->getMessage(); // Stocke le message d'erreur
     // On log l'erreur pour le débogage.
-    error_log("Erreur de connexion à la base de données : " . $e->getMessage());
+    error_log("Erreur de connexion à la base de données : " . $db_error_message);
     
     // Vous pouvez choisir de laisser le script continuer (avec $db_connected = false)
     // ou d'arrêter complètement avec un message générique.

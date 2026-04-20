@@ -6,6 +6,7 @@ if (!extension_loaded('pdo_mysql')) {
             <p>L'extension PHP <strong>pdo_mysql</strong> n'est pas chargée. Le site ne peut pas se connecter à la base de données. Veuillez l'activer dans votre fichier <strong>php.ini</strong>.</p>
          </div>");
 }
+require_once 'security_init.php'; // AJOUTÉ : Indispensable pour la session, CSRF et détection d'environnement
 require_once 'db_connect.php';
 
 // Génération et stockage du token CSRF s'il n'existe pas
@@ -286,6 +287,9 @@ try {
             <div style="font-size:3rem;margin-bottom:1rem">🔌</div>
             <p style="font-weight: bold; color: var(--danger);">Erreur de connexion à la base de données.</p>
             <p>Impossible de charger les annonces. Veuillez vérifier la configuration du serveur.</p>
+            <?php if (getenv('RAILWAY_ENVIRONMENT') !== 'production' && !empty($db_error_message)): ?>
+                <p style="font-size:0.8rem; color:var(--danger); margin-top:1rem;">Détail de l'erreur (DEV UNIQUEMENT): <?php echo htmlspecialchars($db_error_message); ?></p>
+            <?php endif; ?>
           </div>
         <?php elseif (empty($displayListings)): // If connected but no listings ?>
           <div style="grid-column: 1 / -1; text-align:center; padding:3rem; color:var(--muted);">
