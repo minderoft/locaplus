@@ -1,97 +1,135 @@
 <?php
 // c:\xampp\htdocs\locaplus\initialize_payment.php
 
-header('Content-Type: application/json');
-
 require_once 'security_init.php'; // Initialise la session et les en-têtes de sécurité
 
 // Vérification critique de l'extension cURL
 if (!extension_loaded('curl')) {
     http_response_code(500);
-    echo json_encode(['status' => false, 'message' => 'Erreur Serveur: L\'extension PHP cURL est requise mais n\'est pas activée.']);
+    // Afficher une erreur claire si cURL est manquant
+    die("Erreur Serveur Critique: L'extension PHP cURL est requise pour les paiements mais n'est pas activée. Veuillez contacter l'administrateur du site.");
     exit;
 }
 
 require_once 'config_paystack.php';
 
 /**
- * Initialise une transaction Paystack en utilisant cURL.
+ * Initialise une transaction Paystack et retourne l'URL de paiement.
  *
  * @param string $email L'email du client.
  * @param int $amount Le montant en sous-unité (kobo/centimes).
  * @param string $callback_url L'URL de redirection après le paiement.
- * @return array Le tableau de réponse de Paystack ou un tableau d'erreur.
+ * @return string L'URL d'autorisation pour la redirection.
+ * @throws Exception Si l'initialisation échoue.
  */
 function initializePaystackTransaction($email, $amount, $callback_url) {
     $url = "https://api.paystack.co/transaction/initialize";
 
+    // Les champs à envoyer à l'API Paystack
     $fields = [
         'email'        => $email,
         'amount'       => $amount,
-        'callback_url' => $callback_url
-        // Vous pouvez ajouter des métadonnées ici si nécessaire
-        // 'metadata' => ['custom_fields' => [['display_name' => "Annonce", 'variable_name' => "listing_title", 'value' => $titleFromForm]]]
+        'callback_url' => $callback_url,
+        'currency'     => 'XOF', // Forcer la devise
+        'channels'     => ['card', 'mobile_money'] // Activer la carte et le mobile money (Wave, Orange, MTN, Moov)
     ];
 
     $fields_string = http_build_query($fields);
 
+    // Initialisation de cURL
     $ch = curl_init();
-    curl_setopt($ch, CURLOPT_URL, $url);
-    curl_setopt($ch, CURLOPT_POST, true);
-    curl_setopt($ch, CURLOPT_POSTFIELDS, $fields_string);
-    curl_setopt($ch, CURLOPT_HTTPHEADER, [
-        "Authorization: Bearer " . PAYSTACK_SECRET_KEY,
-        "Cache-Control: no-cache",
-    ]);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    
+    try {
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $fields_string);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, [
+            // Utilisation de la constante PAYSTACK_SECRET_KEY définie dans config_paystack.php
+            "Authorization: Bearer " . PAYSTACK_SECRET_KEY,
+            "Cache-Control: no-cache",
+        ]);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        // Ajout d'un timeout pour éviter les requêtes bloquantes
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 20);
 
-    $result = curl_exec($ch);
-    $err = curl_error($ch);
-    curl_close($ch);
+        $result = curl_exec($ch);
+        $err = curl_error($ch);
 
-    if ($err) {
-        return ['status' => false, 'message' => "Erreur cURL: " . $err];
+        if ($err) {
+            // Erreur réseau ou de configuration cURL
+            throw new Exception("Erreur cURL: " . $err);
+        }
+
+        $response = json_decode($result, true);
+
+        // Vérifier si Paystack a renvoyé une réponse valide avec une URL d'autorisation
+        if (!$response || !isset($response['status']) || $response['status'] !== true || !isset($response['data']['authorization_url'])) {
+            // Erreur côté Paystack (ex: clé invalide, mauvais paramètre)
+            $paystack_error = $response['message'] ?? 'Réponse invalide de l\'API de paiement.';
+            throw new Exception("Erreur Paystack: " . $paystack_error);
+        }
+
+        return $response['data']['authorization_url'];
+
+    } finally {
+        // S'assurer que la ressource cURL est toujours fermée
+        curl_close($ch);
     }
-
-    return json_decode($result, true);
 }
 
+// --- LOGIQUE DE PAIEMENT SÉCURISÉE ---
+
+// 1. Récupérer les données envoyées en POST (depuis le formulaire de paiement)
+// Note: Le JavaScript doit maintenant soumettre un formulaire ou rediriger vers cette page avec les données.
+// Pour cet exemple, nous supposons que les données sont envoyées via POST.
 $postData = json_decode(file_get_contents('php://input'), true);
 
-// --- CORRECTIONS DE SÉCURITÉ ET DE LOGIQUE APPLIQUÉES ---
-
-// 1. Validation des données entrantes (email et catégorie) depuis le corps JSON de la requête
+// 2. Validation stricte des données entrantes
 $email = filter_var($postData['email'] ?? null, FILTER_VALIDATE_EMAIL);
 $category = isset($postData['category']) ? trim($postData['category']) : null;
 
 if (!$email || !$category) {
     http_response_code(400);
-    echo json_encode(['status' => false, 'message' => 'Données de paiement invalides.']);
+    die("Données de paiement invalides ou manquantes. L'email et la catégorie sont requis.");
     exit;
 }
 
-// 2. Logique de tarification stricte et sécurisée côté serveur
+// 3. Logique de tarification sécurisée côté serveur (non modifiable par le client)
 $amount = 0;
 switch ($category) {
-    // Les clés correspondent à ce qui est envoyé par le script.js
-    case 'immo':
+    case 'immo': // Immobilier
         $amount = 5000;
         break;
-    case 'btp':
-    case 'veh':
+    case 'btp':  // BTP & Matériel
+    case 'veh':  // Véhicules
         $amount = 4000;
         break;
-    case 'tech':
+    case 'tech': // Techniciens
         $amount = 3000;
         break;
     default:
-        // Si une catégorie inconnue est envoyée, on bloque la transaction pour la sécurité.
-        http_response_code(400); // Bad Request
-        echo json_encode(['status' => false, 'message' => 'Catégorie de produit invalide.']);
+        // Bloquer la transaction si la catégorie est inconnue
+        http_response_code(400);
+        die("Catégorie de produit invalide. Transaction annulée pour des raisons de sécurité.");
         exit;
 }
 
-// 3. Initialisation de la transaction avec le montant converti (x100) et l'URL de production
-$response = initializePaystackTransaction($email, $amount * 100, 'https://locaplus-production.up.railway.app/verify_transaction.php');
+// 4. Initialisation de la transaction et redirection
+try {
+    // Le montant est multiplié par 100 pour être en kobo/centimes
+    $amount_in_kobo = $amount * 100;
+    $callback_url = 'https://locaplus-production.up.railway.app/verify_transaction.php';
 
-echo json_encode($response);
+    $authorization_url = initializePaystackTransaction($email, $amount_in_kobo, $callback_url);
+
+    // Redirection de l'utilisateur vers la page de paiement Paystack
+    header('Location: ' . $authorization_url);
+    exit();
+
+} catch (Exception $e) {
+    // Gérer les erreurs de manière propre et afficher un message clair
+    http_response_code(500);
+    error_log("Erreur d'initialisation de paiement: " . $e->getMessage()); // Log pour le debug
+    die("Impossible d'initier le paiement. Erreur: " . htmlspecialchars($e->getMessage()));
+}
