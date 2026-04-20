@@ -122,6 +122,9 @@ try {
     $amount_in_kobo = $amount * 100;
     $callback_url = 'https://locaplus-production.up.railway.app/verify_transaction.php';
 
+    // Log pour le débogage : vérifier les données juste avant l'appel à Paystack
+    error_log("Initialisation Paystack pour: email={$email}, category={$category}, amount={$amount_in_kobo}");
+
     $authorization_url = initializePaystackTransaction($email, $amount_in_kobo, $callback_url);
 
     // Redirection de l'utilisateur vers la page de paiement Paystack
