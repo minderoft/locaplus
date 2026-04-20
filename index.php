@@ -1791,7 +1791,7 @@ function renderListings(tab, filtered) {
   }).join('');
 }
 
-function switchListingTab(tab) {
+function switchListingTab(tab) { 
   App.currentListingTab = tab;
   displayCount = 6; 
   ['immo','veh','btp','tech'].forEach(t => {
