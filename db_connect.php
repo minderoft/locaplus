@@ -9,11 +9,11 @@ $db_connected = false;
 $db_error_message = ''; // Nouvelle variable pour stocker le message d'erreur détaillé
 
 // Configuration pour RAILWAY (utilise les variables d'environnement standard)
-$host = getenv('MYSQLHOST') ?: '127.0.0.1'; // Fallback sur localhost
-$port = getenv('MYSQLPORT') ?: '3306';      // Fallback sur le port par défaut
-$user = getenv('MYSQLUSER') ?: 'root';      // Fallback pour XAMPP/WAMP
-$pass = getenv('MYSQLPASSWORD') ?: '';      // Fallback pour XAMPP/WAMP
-$dbname = getenv('MYSQLDATABASE') ?: 'locaplus_db'; // Nom de DB local suggéré
+$host = getenv('DB_HOST') ?: '127.0.0.1'; // Fallback sur localhost
+$port = getenv('DB_PORT') ?: '3306';      // Fallback sur le port par défaut
+$user = getenv('DB_USERNAME') ?: 'root';      // Fallback pour XAMPP/WAMP
+$pass = getenv('DB_PASSWORD') ?: '';      // Fallback pour XAMPP/WAMP
+$dbname = getenv('DB_DATABASE') ?: 'locaplus_db'; // Nom de DB local suggéré
 
 try {
     // Vérification ajoutée ici pour un message d'erreur plus précis
