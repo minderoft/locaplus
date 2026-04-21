@@ -154,11 +154,11 @@ try {
 </nav>
 
 <!-- Mobile Menu -->
-<div id="mobile-menu" style="display:none;position:fixed;top:64px;left:0;right:0;background:var(--dark);border-bottom:1px solid var(--dark3);z-index:490;padding:1rem 1.5rem;flex-direction:column;gap:0.5rem">
-  <a onclick="showPage('home');toggleMenu()" style="padding:0.65rem 0;color:var(--muted);font-size:0.9rem;cursor:pointer;display:block">🏠 Accueil</a>
-  <a onclick="scrollToSection('listings-section');toggleMenu()" style="padding:0.65rem 0;color:var(--muted);font-size:0.9rem;cursor:pointer;display:block">📋 Annonces</a>
-  <a onclick="scrollToSection('publish-section');toggleMenu()" style="padding:0.65rem 0;color:var(--muted);font-size:0.9rem;cursor:pointer;display:block">📝 Publier</a>
-  <a onclick="openContactGeneral();toggleMenu()" style="padding:0.65rem 0;color:var(--muted);font-size:0.9rem;cursor:pointer;display:block">📞 Contact</a>
+<div id="mobile-menu">
+  <a onclick="showPage('home');toggleMenu()">🏠 Accueil</a>
+  <a onclick="scrollToSection('listings-section');toggleMenu()">📋 Annonces</a>
+  <a onclick="scrollToSection('publish-section');toggleMenu()">📝 Publier</a>
+  <a onclick="openContactGeneral();toggleMenu()">📞 Contact</a>
 </div>
 
 <!-- ═══════════════ MAIN PAGES ═══════════════ -->
@@ -168,7 +168,7 @@ try {
 <div id="home-page">
 
   <!-- HERO -->
-  <section id="hero" style="background:var(--dark)">
+  <section id="hero">
     <div class="hero-mesh"></div>
     <div class="hero-badge">✨ La référence multiservices en Côte d'Ivoire</div>
     <h1>Votre recherche s'arrête ici.<br><em>Commencez votre projet.</em></h1>
@@ -194,7 +194,7 @@ try {
         <button class="s-tab <?php echo $currentListingType == 'tech' ? 'active' : ''; ?>" id="stab-tech" onclick="switchSearchTab('tech')">🛠️ Techniciens</button>
       </div>
       <div class="search-box">
-        <span style="color:var(--muted);font-size:1.1rem;flex-shrink:0">🔍</span>
+        <span>🔍</span>
         <input type="text" id="search-input" placeholder="Appartement 3 pièces à Cocody..." oninput="filterListings()" autocomplete="off" maxlength="200" value="<?php echo htmlspecialchars($searchQuery); ?>">
         <button class="btn btn-primary" onclick="filterListings()"><span class="btn-text">Rechercher</span><span class="btn-spinner"></span></button>
       </div>
@@ -211,8 +211,8 @@ try {
   <section class="section">
     <div class="section-inner">
       <div class="section-tag">Nos secteurs</div>
-      <h2 class="section-title" style="text-align:center">Un accès unique à tout ce dont vous avez besoin</h2>
-      <p class="section-sub" style="text-align:center">Fini les recherches interminables. LocaPlus centralise les meilleures offres de quatre secteurs clés pour vous simplifier la vie.</p>
+      <h2 class="section-title">Un accès unique à tout ce dont vous avez besoin</h2>
+      <p class="section-sub">Fini les recherches interminables. LocaPlus centralise les meilleures offres de quatre secteurs clés pour vous simplifier la vie.</p>
       <div class="sector-grid">
         <div class="sector-card immo" onclick="switchListingTab('immo');scrollToSection('listings-section')">
           <div class="sector-icon-wrap">🏠</div>
@@ -271,16 +271,16 @@ try {
       </div>
       <div class="card-grid" id="listings-grid">
         <?php if (!$db_connected): // Check if DB connection failed ?>
-          <div style="grid-column: 1 / -1; text-align:center; padding:3rem; color:var(--danger); background: rgba(226,75,74,0.05); border: 1px solid rgba(226,75,74,0.1); border-radius: var(--radius-lg);">
-            <div style="font-size:3rem;margin-bottom:1rem">🔌</div>
-            <p style="font-weight: bold; color: var(--danger);">Erreur de connexion à la base de données.</p>
+          <div class="grid-placeholder error">
+            <div class="placeholder-icon">🔌</div>
+            <p class="placeholder-title">Erreur de connexion à la base de données.</p>
             <p>Impossible de charger les annonces. Veuillez vérifier la configuration du serveur.</p>
           </div>
         <?php elseif (empty($displayListings)): // If connected but no listings ?>
-          <div style="grid-column: 1 / -1; text-align:center; padding:3rem; color:var(--muted);">
-            <div style="font-size:3rem;margin-bottom:1rem">🔍</div>
+          <div class="grid-placeholder">
+            <div class="placeholder-icon">🔍</div>
             <p>Aucune annonce trouvée pour cette recherche.</p>
-            <button class="btn btn-ghost" style="margin-top:1rem" onclick="resetFilters()">Réinitialiser les filtres</button>
+            <button class="btn btn-ghost" onclick="resetFilters()">Réinitialiser les filtres</button>
           </div>
         <?php else: ?>
           <?php foreach ($displayListings as $l):
@@ -311,11 +311,11 @@ try {
           <?php endforeach; ?>
         <?php endif; ?>
       </div>
-      <div style="text-align:center;margin-top:2.5rem">
+      <div class="grid-footer">
         <?php if (count($displayListings) == $limit): // If we fetched max, there might be more ?>
           <button class="btn btn-secondary" id="load-more-btn" onclick="loadMore()">Voir plus d'annonces →</button>
         <?php else: ?>
-          <button class="btn btn-secondary" id="load-more-btn" style="display:none">Voir plus d'annonces →</button>
+          <button class="btn btn-secondary" id="load-more-btn" hidden>Voir plus d'annonces →</button>
         <?php endif; ?>
       </div>
     </div>
@@ -362,7 +362,7 @@ try {
         </div>
         <div>
           <p class="section-tag">Choisir un forfait</p>
-          <div style="margin-bottom:1rem">
+          <div class="plans-wrapper">
             <div class="plans-grid" id="plans-grid">
               <div class="plan-card selected" data-plan="starter" data-price="5000" onclick="selectPlan(this)">
                 <div class="plan-name">Starter</div>
@@ -402,7 +402,7 @@ try {
           <button class="btn btn-primary btn-full btn-lg" onclick="requireAuth(()=>openPublishModal())">
             📝 <span class="btn-text">Publier mon annonce</span><span class="btn-spinner"></span>
           </button>
-          <p style="font-size:0.78rem;color:var(--muted);text-align:center;margin-top:0.75rem">Paiement sécurisé via <strong style="color:var(--text)">Paystack</strong> · SSL/TLS · PCI DSS</p>
+          <p class="payment-secure-notice">Paiement sécurisé via <strong>Paystack</strong> · SSL/TLS · PCI DSS</p>
         </div>
       </div>
     </div>
@@ -412,7 +412,7 @@ try {
   <section class="section">
     <div class="section-inner">
       <div class="section-tag">Pourquoi nous choisir</div>
-      <h2 class="section-title" style="text-align:center">Votre tranquillité d'esprit, notre priorité</h2>
+      <h2 class="section-title">Votre tranquillité d'esprit, notre priorité</h2>
       <div class="feat-grid">
         <div class="feat-item">
           <div class="feat-icon">🔒</div>
@@ -439,7 +439,7 @@ try {
   </section>
 
   <!-- CTA -->
-  <div class="cta-wrap">
+  <section class="cta-wrap section">
     <div class="cta-inner">
       <h2>Lancez-vous sur LocaPlus dès aujourd'hui</h2>
       <p>Créez un compte gratuit et commencez à explorer, publier et échanger sur la plateforme multiservices la plus complète de Côte d'Ivoire.</p>
@@ -448,7 +448,7 @@ try {
         <button class="btn btn-secondary btn-lg" onclick="openModal('auth-modal');showAuthTab('register')">Créer un compte</button>
       </div>
     </div>
-  </div>
+  </section>
 
   <!-- FOOTER -->
   <footer>
@@ -511,15 +511,15 @@ try {
     <div>
       <div class="detail-gallery" id="detail-main-img"><span id="detail-emoji">🏢</span></div>
       <div class="gallery-thumbs" id="gallery-thumbs"></div>
-      <div style="margin-top:2rem">
-        <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:1rem;margin-bottom:0.5rem">
+      <div class="detail-content-wrap">
+        <div class="detail-header">
           <h1 class="detail-title" id="detail-title">-</h1>
-          <button class="btn btn-icon btn-ghost" id="detail-fav-btn" onclick="toggleDetailFav()" title="Ajouter aux favoris" style="flex-shrink:0;margin-top:4px">🤍</button>
+          <button class="btn btn-icon btn-ghost" id="detail-fav-btn" onclick="toggleDetailFav()" title="Ajouter aux favoris">🤍</button>
         </div>
         <div class="detail-loc" id="detail-loc">📍 -</div>
         <div class="detail-tags" id="detail-tags"></div>
         <div class="detail-desc">
-          <h3 style="margin-top:2rem">Description</h3>
+          <h3>Description</h3>
           <p id="detail-desc">-</p>
         </div>
       </div>
@@ -527,7 +527,7 @@ try {
     <div class="detail-sidebar">
       <div class="detail-price-card">
         <div class="detail-price" id="detail-price">-</div>
-        <div style="font-size:0.82rem;color:var(--muted)" id="detail-price-unit">-</div>
+        <div class="detail-price-unit" id="detail-price-unit">-</div>
         <div class="detail-seller">
           <div class="seller-avatar" id="seller-avatar">?</div>
           <div>
@@ -553,7 +553,7 @@ try {
 <!-- ─── DASHBOARD ─── -->
 <div id="dashboard">
   <div class="dash-header">
-    <div style="display:flex;align-items:center;justify-content:space-between">
+    <div class="dash-header-inner">
       <div>
         <div class="section-tag">Espace personnel</div>
         <h2 class="dash-title" id="dash-welcome">Mon tableau de bord</h2>
@@ -706,34 +706,34 @@ try {
       <!-- STEP 1 -->
       <div id="pub-s1"> 
         <p class="form-section-title">Choisissez la catégorie</p> 
-        <div style="display:grid;grid-template-columns:repeat(4, 1fr);gap:1rem;margin-bottom:1.5rem">
-          <div class="sector-card immo" id="cat-immo" style="padding:1.25rem;cursor:pointer;text-align:center" onclick="selectCategory('immo')">
-            <div style="font-size:1.5rem;margin-bottom:0.5rem">🏠</div>
-            <div style="font-family:Inter,sans-serif;font-size:0.88rem;font-weight:700">Immobilier</div>
-            <div style="font-size:0.75rem;color:var(--muted);margin-top:0.25rem">Bien & terrain</div>
+        <div class="category-selector">
+          <div class="sector-card immo" id="cat-immo" onclick="selectCategory('immo')">
+            <div class="cat-icon">🏠</div>
+            <div class="cat-name">Immobilier</div>
+            <div class="cat-desc">Bien & terrain</div>
           </div>
-          <div class="sector-card veh" id="cat-veh" style="padding:1.25rem;cursor:pointer;text-align:center" onclick="selectCategory('veh')">
-            <div style="font-size:1.5rem;margin-bottom:0.5rem">🚗</div>
-            <div style="font-family:Inter,sans-serif;font-size:0.88rem;font-weight:700">Véhicules</div>
-            <div style="font-size:0.75rem;color:var(--muted);margin-top:0.25rem">Auto & moto</div>
+          <div class="sector-card veh" id="cat-veh" onclick="selectCategory('veh')">
+            <div class="cat-icon">🚗</div>
+            <div class="cat-name">Véhicules</div>
+            <div class="cat-desc">Auto & moto</div>
           </div>
-          <div class="sector-card btp" id="cat-btp" style="padding:1.25rem;cursor:pointer;text-align:center" onclick="selectCategory('btp')">
-            <div style="font-size:1.5rem;margin-bottom:0.5rem">🏗️</div>
-            <div style="font-family:Inter,sans-serif;font-size:0.88rem;font-weight:700">BTP</div>
-            <div style="font-size:0.75rem;color:var(--muted);margin-top:0.25rem">Engins & matériel</div>
+          <div class="sector-card btp" id="cat-btp" onclick="selectCategory('btp')">
+            <div class="cat-icon">🏗️</div>
+            <div class="cat-name">BTP</div>
+            <div class="cat-desc">Engins & matériel</div>
           </div>
-          <div class="sector-card tech" id="cat-tech" style="padding:1.25rem;cursor:pointer;text-align:center" onclick="selectCategory('tech')">
-            <div style="font-size:1.5rem;margin-bottom:0.5rem">🛠️</div>
-            <div style="font-family:Inter,sans-serif;font-size:0.88rem;font-weight:700">Technicien</div>
-            <div style="font-size:0.75rem;color:var(--muted);margin-top:0.25rem">Artisan & service</div>
+          <div class="sector-card tech" id="cat-tech" onclick="selectCategory('tech')">
+            <div class="cat-icon">🛠️</div>
+            <div class="cat-name">Technicien</div>
+            <div class="cat-desc">Artisan & service</div>
           </div>
         </div>
         <div class="form-group" id="fg-cat-type">
           <label class="form-label">Type d'annonce <span class="required">*</span></label>
           <select class="form-select" id="pub-offre-type">
             <option value="">Sélectionnez</option>
-            <option value="location">Location</option>
-            <option value="vente">Vente</option>
+            <option value="Location">Location</option>
+            <option value="Vente">Vente</option>
           </select>
           <div class="form-error" id="err-pub-type">Sélectionnez un type</div>
         </div>
@@ -747,22 +747,22 @@ try {
         <!-- Plan selection inside publish -->
         <div class="form-group">
           <label class="form-label">Forfait de publication <span class="required">*</span></label>
-          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:0.75rem" id="pub-plans">
-            <div class="plan-card selected" data-plan="starter" data-price="5000" onclick="selectPubPlan(this)" style="padding:1rem">
-              <div class="plan-name" style="font-size:0.85rem">Starter</div>
-              <div class="plan-price" style="font-size:1.2rem">5 000 <span>F</span></div>
-              <div style="font-size:0.72rem;color:var(--muted);margin-top:0.4rem">30 jours</div>
+          <div class="pub-plans-grid" id="pub-plans">
+            <div class="plan-card-mini selected" data-plan="starter" data-price="5000" onclick="selectPubPlan(this)">
+              <div class="plan-name">Starter</div>
+              <div class="plan-price">5 000 <span>F</span></div>
+              <div class="plan-duration">30 jours</div>
             </div>
-            <div class="plan-card" data-plan="pro" data-price="15000" onclick="selectPubPlan(this)" style="padding:1rem;position:relative">
-              <div class="plan-popular" style="font-size:0.6rem">Populaire</div>
-              <div class="plan-name" style="font-size:0.85rem">Pro</div>
-              <div class="plan-price" style="font-size:1.2rem">15 000 <span>F</span></div>
-              <div style="font-size:0.72rem;color:var(--muted);margin-top:0.4rem">60 jours</div>
+            <div class="plan-card-mini" data-plan="pro" data-price="15000" onclick="selectPubPlan(this)">
+              <div class="plan-popular">Populaire</div>
+              <div class="plan-name">Pro</div>
+              <div class="plan-price">15 000 <span>F</span></div>
+              <div class="plan-duration">60 jours</div>
             </div>
-            <div class="plan-card" data-plan="business" data-price="35000" onclick="selectPubPlan(this)" style="padding:1rem">
-              <div class="plan-name" style="font-size:0.85rem">Business</div>
-              <div class="plan-price" style="font-size:1.2rem">35 000 <span>F</span></div>
-              <div style="font-size:0.72rem;color:var(--muted);margin-top:0.4rem">90 jours</div>
+            <div class="plan-card-mini" data-plan="business" data-price="35000" onclick="selectPubPlan(this)">
+              <div class="plan-name">Business</div>
+              <div class="plan-price">35 000 <span>F</span></div>
+              <div class="plan-duration">90 jours</div>
             </div>
           </div>
         </div>
@@ -846,23 +846,23 @@ try {
           </div>
         </div>
         <div class="photo-preview-grid" id="photo-preview-grid"></div>
-        <div style="margin-top:0.75rem;font-size:0.8rem;color:var(--muted)">
+        <div class="upload-tip">
           💡 La première photo sera la photo principale de votre annonce
         </div>
-        <div style="margin-top:1.25rem;background:var(--dark3);border-radius:var(--radius);padding:1rem">
-          <div style="font-size:0.82rem;font-weight:600;margin-bottom:0.5rem">Conseils pour de meilleures photos :</div>
-          <div style="font-size:0.78rem;color:var(--muted);display:flex;flex-direction:column;gap:0.3rem">
+        <div class="photo-tips">
+          <div class="tips-title">Conseils pour de meilleures photos :</div>
+          <ul class="tips-list">
             <div>✅ Prenez des photos en lumière naturelle</div>
             <div>✅ Montrez toutes les pièces / angles importants</div>
             <div>✅ Évitez les photos floues ou en contre-jour</div>
-          </div>
+          </ul>
         </div>
       </div>
 
       <!-- STEP 4 (Summary + Payment) -->
       <div id="pub-s4" style="display:none">
         <p class="form-section-title">Récapitulatif & Paiement</p>
-        <div id="pub-summary" style="background:var(--dark3);border-radius:var(--radius-lg);padding:1.25rem;margin-bottom:1.5rem"></div>
+        <div class="summary-box" id="pub-summary"></div>
         <div class="paystack-logo">
           <span style="font-size:1.1rem">💳</span>
           Paiement sécurisé via <strong>Paystack</strong> · PCI DSS Level 1
@@ -872,11 +872,11 @@ try {
           <div class="sec-item">Toutes les transactions sont chiffrées avec SSL/TLS 256-bit</div>
           <div class="sec-item">Paystack est certifié PCI DSS Level 1 – le plus haut niveau de sécurité</div>
         </div>
-        <div id="pub-payment-summary" style="background:var(--dark2);border:0.5px solid rgba(255,255,255,0.08);border-radius:var(--radius-lg);padding:1.25rem;margin-bottom:1.5rem"></div>
+        <div class="summary-box" id="pub-payment-summary"></div>
         <button class="btn btn-primary btn-full btn-lg" id="btn-pay-publish" onclick="initiatePaystackPayment()">
           💳 <span class="btn-text">Payer et publier mon annonce</span><span class="btn-spinner"></span>
         </button>
-        <p style="font-size:0.75rem;color:var(--muted);text-align:center;margin-top:0.75rem">En cliquant sur "Payer", vous acceptez nos conditions générales</p>
+        <p class="payment-secure-notice">En cliquant sur "Payer", vous acceptez nos conditions générales</p>
       </div>
     </div>
     <div class="modal-footer">
@@ -920,11 +920,11 @@ try {
       <button class="modal-close" onclick="closeModal('message-modal')">✕</button>
     </div>
     <div class="modal-body">
-      <div id="msg-annonce-info" style="padding:0.75rem;background:var(--dark3);border-radius:var(--radius);margin-bottom:1.25rem;font-size:0.85rem;color:var(--muted)"></div>
+      <div class="msg-annonce-info" id="msg-annonce-info"></div>
       <div class="message-thread" id="message-thread"></div>
-      <div style="display:flex;gap:0.75rem">
+      <div class="msg-input-area">
         <input type="text" class="form-input" id="msg-input" placeholder="Votre message..." maxlength="500" onkeydown="if(event.key==='Enter')sendMessage()">
-        <button class="btn btn-primary" onclick="sendMessage()">➤</button>
+        <button class="btn btn-primary btn-icon" onclick="sendMessage()">➤</button>
       </div>
     </div>
   </div>
@@ -937,11 +937,11 @@ try {
       <div class="modal-title">📞 Contacter le propriétaire</div>
       <button class="modal-close" onclick="closeModal('call-modal')">✕</button>
     </div>
-    <div class="modal-body" style="text-align:center;padding:2rem">
-      <div style="font-size:3.5rem;margin-bottom:1rem">📞</div>
-      <div style="font-family:Inter,sans-serif;font-size:1.4rem;font-weight:700;margin-bottom:0.4rem" id="call-number">+225 07 00 00 00 00</div>
-      <div style="color:var(--muted);font-size:0.85rem;margin-bottom:1.5rem" id="call-name">Propriétaire</div>
-      <div style="background:rgba(201,168,76,0.06);border:0.5px solid rgba(201,168,76,0.12);border-radius:var(--radius);padding:0.85rem;font-size:0.78rem;color:var(--muted);margin-bottom:1.5rem">
+    <div class="modal-body call-modal-body">
+      <div class="call-icon">📞</div>
+      <div class="call-number" id="call-number">+225 07 00 00 00 00</div>
+      <div class="call-name" id="call-name">Propriétaire</div>
+      <div class="security-warning">
         ⚠️ Attention aux arnaques – Ne versez jamais d'argent avant d'avoir visité le bien. LocaPlus ne vous demandera jamais vos coordonnées bancaires.
       </div>
       <button class="btn btn-primary btn-full" onclick="window.location.href='tel:'+document.getElementById('call-number').dataset.number">📞 Appeler maintenant</button>
@@ -994,7 +994,7 @@ try {
       <button class="modal-close" onclick="closeModal('forgot-modal')">✕</button>
     </div>
     <div class="modal-body">
-      <p style="color:var(--muted);font-size:0.88rem;margin-bottom:1.25rem;line-height:1.6">Entrez votre email pour recevoir un lien de réinitialisation.</p>
+      <p class="modal-subtext">Entrez votre email pour recevoir un lien de réinitialisation.</p>
       <div class="form-group" id="fg-forgot-email">
         <label class="form-label">Email <span class="required">*</span></label>
         <input type="email" class="form-input" id="forgot-email" placeholder="votre@email.com" maxlength="200" onkeydown="if(event.key==='Enter')submitForgot()">
