@@ -212,9 +212,9 @@ try {
       <div class="section-tag">Nos secteurs</div>
       <h2 class="section-title">Un accès unique à tout ce dont vous avez besoin</h2>
       <p class="section-sub">Fini les recherches interminables. LocaPlus centralise les meilleures offres de quatre secteurs clés pour vous simplifier la vie.</p>
-      <div class="sector-grid">
+      <div class="info-card-grid">
         <div class="sector-card immo" onclick="switchListingTab('immo');scrollToSection('listings-section')">
-          <img src="https://images.unsplash.com/photo-1580587771525-78b9dba3b914?q=80&w=1974&auto=format&fit=crop" alt="Immobilier" class="sector-img">
+          <div class="info-card-icon">🏠</div>
           <h3>Immobilier</h3>
           <p>Appartements meublés, villas, maisons, bureaux et terrains à travers tout le pays. Achat, vente ou location.</p>
           <div class="sector-bottom">
@@ -223,7 +223,7 @@ try {
           </div>
         </div>
         <div class="sector-card veh" onclick="switchListingTab('veh');scrollToSection('listings-section')">
-          <img src="https://images.unsplash.com/photo-1552519507-da3b142c6e3d?q=80&w=2070&auto=format&fit=crop" alt="Véhicules" class="sector-img">
+          <div class="info-card-icon">🚗</div>
           <h3>Véhicules</h3>
           <p>Location courte durée, achat de véhicules d'occasion ou neufs. Toutes les marques, toutes les gammes.</p>
           <div class="sector-bottom">
@@ -232,7 +232,7 @@ try {
           </div>
         </div>
         <div class="sector-card btp" onclick="switchListingTab('btp');scrollToSection('listings-section')">
-          <img src="https://images.unsplash.com/photo-1581193692459-2541f7349a34?q=80&w=2070&auto=format&fit=crop" alt="BTP & Matériel" class="sector-img">
+          <div class="info-card-icon">🏗️</div>
           <h3>BTP & Matériel</h3>
           <p>Engins de chantier, grues, bétonnières et équipements professionnels. Répondez à vos besoins rapidement.</p>
           <div class="sector-bottom">
@@ -241,7 +241,7 @@ try {
           </div>
         </div>
         <div class="sector-card tech" onclick="switchListingTab('tech');scrollToSection('listings-section')">
-          <img src="https://images.unsplash.com/photo-1581822261290-991b38693d1b?q=80&w=2070&auto=format&fit=crop" alt="Techniciens" class="sector-img">
+          <div class="info-card-icon">🛠️</div>
           <h3>Techniciens</h3>
           <p>Plombiers, électriciens, peintres et autres artisans qualifiés pour tous vos travaux et réparations.</p>
           <div class="sector-bottom">
@@ -328,34 +328,26 @@ try {
           <div class="section-tag">Vendez. Louez. Proposez.</div>
           <h3 class="publish-title">Donnez une visibilité maximale à votre offre</h3>
           <p>Publier sur LocaPlus, c'est simple, rapide et efficace. Rejoignez notre communauté de vendeurs et prestataires de confiance et touchez des milliers de clients potentiels chaque jour.</p>
-          <div class="publish-features">
-            <div class="pub-feat">
-              <div class="pub-feat-icon">✅</div>
-              <div class="pub-feat-text">
-                <h4>Validation rapide</h4>
-                <p>Votre annonce est examinée et mise en ligne en moins de 24h pour une visibilité immédiate.</p>
-              </div>
+          <div class="info-card-grid" style="text-align: left; gap: 1rem;">
+            <div class="info-card" style="text-align: left;">
+              <div class="info-card-icon">✅</div>
+              <h4>Validation rapide</h4>
+              <p>Votre annonce est examinée et mise en ligne en moins de 24h.</p>
             </div>
-            <div class="pub-feat">
-              <div class="pub-feat-icon">📸</div>
-              <div class="pub-feat-text">
-                <h4>Présentation soignée</h4>
-                <p>Mettez en valeur votre offre avec jusqu'à 10 photos HD pour attirer l'œil et convaincre.</p>
-              </div>
+            <div class="info-card" style="text-align: left;">
+              <div class="info-card-icon">📸</div>
+              <h4>Présentation soignée</h4>
+              <p>Mettez en valeur votre offre avec jusqu'à 10 photos HD.</p>
             </div>
-            <div class="pub-feat">
-              <div class="pub-feat-icon">🔒</div>
-              <div class="pub-feat-text">
-                <h4>Transactions sécurisées</h4>
-                <p>Nous utilisons Paystack, leader du paiement en ligne, pour garantir la sécurité de chaque transaction.</p>
-              </div>
+            <div class="info-card" style="text-align: left;">
+              <div class="info-card-icon">🔒</div>
+              <h4>Transactions sécurisées</h4>
+              <p>Nous utilisons Paystack pour garantir la sécurité de chaque transaction.</p>
             </div>
-            <div class="pub-feat">
-              <div class="pub-feat-icon">📊</div>
-              <div class="pub-feat-text">
-                <h4>Tableau de bord complet</h4>
-                <p>Suivez les vues, contacts et performances de vos annonces en temps réel.</p>
-              </div>
+            <div class="info-card" style="text-align: left;">
+              <div class="info-card-icon">📊</div>
+              <h4>Tableau de bord complet</h4>
+              <p>Suivez les vues, contacts et performances de vos annonces.</p>
             </div>
           </div>
         </div>
@@ -411,24 +403,24 @@ try {
     <div class="section-inner">
       <div class="section-tag">Pourquoi nous choisir</div>
       <h2 class="section-title">Votre tranquillité d'esprit, notre priorité</h2>
-      <div class="feat-grid">
-        <div class="feat-item">
-          <div class="feat-icon">🔒</div>
+      <div class="info-card-grid">
+        <div class="info-card">
+          <div class="info-card-icon">🔒</div>
           <h4>Sécurité maximale</h4>
           <p>Nous appliquons les standards de sécurité les plus stricts pour protéger vos données à chaque instant.</p>
         </div>
-        <div class="feat-item">
-          <div class="feat-icon">✅</div>
+        <div class="info-card">
+          <div class="info-card-icon">✅</div>
           <h4>Annonces vérifiées</h4>
           <p>Notre équipe de modération valide chaque annonce pour une expérience fiable et sans surprise.</p>
         </div>
-        <div class="feat-item">
-          <div class="feat-icon">💬</div>
+        <div class="info-card">
+          <div class="info-card-icon">💬</div>
           <h4>Messagerie sécurisée</h4>
           <p>Échangez en toute confiance grâce à notre messagerie interne qui protège vos informations personnelles.</p>
         </div>
-        <div class="feat-item">
-          <div class="feat-icon">💳</div>
+        <div class="info-card">
+          <div class="info-card-icon">💳</div>
           <h4>Paiements certifiés</h4>
           <p>Transactions 100% sécurisées via Paystack, certifié PCI DSS niveau 1 – le plus haut standard.</p>
         </div>
