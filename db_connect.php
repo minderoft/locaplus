@@ -16,6 +16,12 @@ $pass = getenv('MYSQLPASSWORD') ?: '';      // Fallback pour XAMPP/WAMP
 $dbname = getenv('MYSQLDATABASE') ?: 'locaplus_db'; // Nom de DB local suggéré
 
 try {
+    // Vérification ajoutée ici pour un message d'erreur plus précis
+    if (!extension_loaded('pdo_mysql')) {
+        $db_connected = false;
+        throw new PDOException("L'extension pdo_mysql n'est pas chargée dans l'environnement PHP.");
+    }
+
     $pdo = new PDO("mysql:host=$host;port=$port;dbname=$dbname;charset=utf8", $user, $pass);
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     $db_connected = true; // La connexion a réussi
