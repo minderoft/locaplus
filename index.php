@@ -168,7 +168,7 @@ try {
 <div id="home-page">
 
   <!-- HERO -->
-  <section id="hero" class="section">
+  <section id="hero" class="section" style="">
     <div class="hero-mesh"></div>
     <div class="hero-badge">✨ La référence multiservices en Côte d'Ivoire</div>
     <h1>Votre recherche s'arrête ici.<br><em>Commencez votre projet.</em></h1>
@@ -194,7 +194,7 @@ try {
         <button class="s-tab <?php echo $currentListingType == 'tech' ? 'active' : ''; ?>" id="stab-tech" onclick="switchSearchTab('tech')">🛠️ Techniciens</button>
       </div>
       <div class="search-box">
-        <span>🔍</span>
+        <span style="font-size:1.1rem;flex-shrink:0">🔍</span>
         <input type="text" id="search-input" placeholder="Appartement 3 pièces à Cocody..." oninput="filterListings()" autocomplete="off" maxlength="200" value="<?php echo htmlspecialchars($searchQuery); ?>">
         <button class="btn btn-primary" onclick="filterListings()"><span class="btn-text">Rechercher</span><span class="btn-spinner"></span></button>
       </div>
@@ -271,16 +271,16 @@ try {
       </div>
       <div class="card-grid" id="listings-grid">
         <?php if (!$db_connected): // Check if DB connection failed ?>
-          <div class="grid-placeholder error" style="grid-column: 1 / -1;">
+          <div class="grid-placeholder error" style="grid-column: 1 / -1; text-align:center; padding:3rem; color:var(--red); background: rgba(255,69,58,0.05); border: 1px solid rgba(255,69,58,0.1); border-radius: var(--radius-lg);">
             <div class="placeholder-icon">🔌</div>
             <p class="placeholder-title">Erreur de connexion à la base de données.</p>
             <p>Impossible de charger les annonces. Veuillez vérifier la configuration du serveur.</p>
           </div>
         <?php elseif (empty($displayListings)): // If connected but no listings ?>
-          <div class="grid-placeholder" style="grid-column: 1 / -1;">
+          <div class="grid-placeholder" style="grid-column: 1 / -1; text-align:center; padding:3rem; color:var(--text-muted);">
             <div class="placeholder-icon">🔍</div>
             <p>Aucune annonce trouvée pour cette recherche.</p>
-            <button class="btn btn-ghost" onclick="resetFilters()">Réinitialiser les filtres</button>
+            <button class="btn btn-ghost" onclick="resetFilters()" style="margin-top:1rem">Réinitialiser les filtres</button>
           </div>
         <?php else: ?>
           <?php foreach ($displayListings as $l):
@@ -289,7 +289,7 @@ try {
             $isFav = false; // This would need server-side check for logged-in user
             $imgHtml = !empty($photos) ? '<img src="' . htmlspecialchars($photos[0]) . '" alt="' . htmlspecialchars($l['title']) . '" loading="lazy">' : '';
           ?>
-            <div class="listing-card" onclick="openDetail('<?php echo htmlspecialchars($l['id']); ?>')">
+            <div class="listing-card <?php echo htmlspecialchars($l['type']); ?>" onclick="openDetail('<?php echo htmlspecialchars($l['id']); ?>')">
               <div class="card-thumb <?php echo htmlspecialchars($l['type']); ?>">
                 <?php echo $imgHtml; ?>
                 <?php if (empty($photos)): ?><span><?php echo htmlspecialchars($l['emoji'] ?? '🏢'); ?></span><?php endif; ?>
@@ -511,7 +511,7 @@ try {
     <div>
       <div class="detail-gallery" id="detail-main-img"><span id="detail-emoji">🏢</span></div>
       <div class="gallery-thumbs" id="gallery-thumbs"></div>
-      <div class="detail-content-wrap" style="margin-top:2rem">
+      <div class="detail-content-wrap">
         <div class="detail-header">
           <h1 class="detail-title" id="detail-title">-</h1>
           <button class="btn btn-icon btn-ghost" id="detail-fav-btn" onclick="toggleDetailFav()" title="Ajouter aux favoris">🤍</button>
@@ -519,7 +519,7 @@ try {
         <div class="detail-loc" id="detail-loc">📍 -</div>
         <div class="detail-tags" id="detail-tags"></div>
         <div class="detail-desc">
-          <h3 style="margin-top:2rem">Description</h3>
+          <h3>Description</h3>
           <p id="detail-desc">-</p>
         </div>
       </div>
@@ -527,7 +527,7 @@ try {
     <div class="detail-sidebar">
       <div class="detail-price-card">
         <div class="detail-price" id="detail-price">-</div>
-        <div class="detail-price-unit" id="detail-price-unit" style="font-size:0.82rem;color:var(--muted)">-</div>
+        <div class="detail-price-unit" id="detail-price-unit">-</div>
         <div class="detail-seller">
           <div class="seller-avatar" id="seller-avatar">?</div>
           <div>
@@ -553,7 +553,7 @@ try {
 <!-- ─── DASHBOARD ─── -->
 <div id="dashboard">
   <div class="dash-header">
-    <div class="dash-header-inner" style="display:flex;align-items:center;justify-content:space-between">
+    <div class="dash-header-inner">
       <div>
         <div class="section-tag">Espace personnel</div>
         <h2 class="dash-title" id="dash-welcome">Mon tableau de bord</h2>
