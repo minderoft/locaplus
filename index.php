@@ -110,10 +110,9 @@ try {
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="LocaPlus">
 <meta name="application-name" content="LocaPlus">
-<meta name="theme-color" content="#007AFF">
+<meta name="theme-color" content="#1A73E8">
 <!-- <link rel="manifest" href="manifest.json"> -->
-
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 <script src="https://js.paystack.co/v1/inline.js"></script>
 <link rel="stylesheet" href="style.css">
 </head>
@@ -146,7 +145,7 @@ try {
       <button class="btn btn-ghost" onclick="logout()">Déconnexion</button>
     </div>
     <div id="nav-auth" style="display:flex; gap:0.6rem;">
-      <button class="btn btn-ghost" onclick="openModal('auth-modal');showAuthTab('login')">Connexion</button>
+      <button class="btn btn-secondary" onclick="openModal('auth-modal');showAuthTab('login')">Connexion</button>
       <button class="btn btn-primary" onclick="openModal('auth-modal');showAuthTab('register')">S'inscrire</button>
     </div>
     <div class="hamburger" onclick="toggleMenu()"><span></span><span></span><span></span></div>
@@ -194,7 +193,7 @@ try {
         <button class="s-tab <?php echo $currentListingType == 'tech' ? 'active' : ''; ?>" id="stab-tech" onclick="switchSearchTab('tech')">🛠️ Techniciens</button>
       </div>
       <div class="search-box">
-        <span>🔍</span>
+        <span style="font-size:1.2rem; color: var(--text-muted); margin-left: 0.5rem;">🔍</span>
         <input type="text" id="search-input" placeholder="Appartement 3 pièces à Cocody..." oninput="filterListings()" autocomplete="off" maxlength="200" value="<?php echo htmlspecialchars($searchQuery); ?>">
         <button class="btn btn-primary" onclick="filterListings()"><span class="btn-text">Rechercher</span><span class="btn-spinner"></span></button>
       </div>
@@ -280,7 +279,7 @@ try {
           <div class="grid-placeholder" style="grid-column: 1 / -1;">
             <div class="placeholder-icon">🔍</div>
             <p>Aucune annonce trouvée pour cette recherche.</p>
-            <button class="btn btn-ghost" onclick="resetFilters()">Réinitialiser les filtres</button>
+            <button class="btn btn-secondary" onclick="resetFilters()">Réinitialiser les filtres</button>
           </div>
         <?php else: ?>
           <?php foreach ($displayListings as $l):
@@ -685,7 +684,7 @@ try {
 
 <!-- PUBLISH MODAL -->
 <div class="modal-overlay publish-modal" id="publish-modal" onclick="handleOverlayClick(event,'publish-modal')">
-  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="publish-modal-title">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="publish-modal-title" style="max-width: 740px;">
     <div class="modal-header">
       <div class="modal-title" id="publish-modal-title">📝 Publier une annonce</div>
       <button class="modal-close" onclick="closeModal('publish-modal')" aria-label="Fermer">✕</button>
@@ -931,7 +930,7 @@ try {
 
 <!-- CALL MODAL -->
 <div class="modal-overlay" id="call-modal" onclick="handleOverlayClick(event,'call-modal')">
-  <div class="modal" role="dialog" aria-modal="true">
+  <div class="modal" role="dialog" aria-modal="true" style="max-width: 400px;">
     <div class="modal-header">
       <div class="modal-title">📞 Contacter le propriétaire</div>
       <button class="modal-close" onclick="closeModal('call-modal')">✕</button>
@@ -950,7 +949,7 @@ try {
 
 <!-- CONTACT GENERAL MODAL -->
 <div class="modal-overlay contact-modal" id="contact-modal" onclick="handleOverlayClick(event,'contact-modal')">
-  <div class="modal" role="dialog" aria-modal="true">
+  <div class="modal" role="dialog" aria-modal="true" style="max-width: 440px;">
     <div class="modal-header">
       <div class="modal-title">📞 Contacter LocaPlus</div>
       <button class="modal-close" onclick="closeModal('contact-modal')">✕</button>
@@ -987,7 +986,7 @@ try {
 
 <!-- FORGOT PASSWORD MODAL -->
 <div class="modal-overlay" id="forgot-modal" onclick="handleOverlayClick(event,'forgot-modal')">
-  <div class="modal">
+  <div class="modal" style="max-width: 400px;">
     <div class="modal-header">
       <div class="modal-title">🔒 Mot de passe oublié</div>
       <button class="modal-close" onclick="closeModal('forgot-modal')">✕</button>
