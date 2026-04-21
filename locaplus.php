@@ -303,7 +303,7 @@ try {
                 <div class="card-location">📍 <?php echo htmlspecialchars($l['location']); ?></div>
                 <div class="card-footer">
                   <div><div class="card-price"><?php echo htmlspecialchars($l['price']); ?> <span class="card-price-unit">FCFA <?php echo htmlspecialchars($l['priceUnit'] ?? ''); ?></span></div></div>
-                  <div class="card-chips"><?php echo implode('', array_map(fn($c) => '<span class="chip">' . htmlspecialchars($c) . '</span>', $chips)); ?></div>
+                  <div class="card-chips"><?php if (!empty($chips)) { echo implode('', array_map(fn($c) => '<span class="chip">' . htmlspecialchars($c) . '</span>', $chips)); } ?></div>
                 </div>
               </div>
             </div>

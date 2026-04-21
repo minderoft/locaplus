@@ -193,7 +193,7 @@ a:hover {
 .form-select,
 .form-textarea {
     width: 100%;
-    background: var(--bg-white);
+    background: var(--dark3); /* CORRECTION: Utilisation de la couleur de fond pour les inputs */
     border: 1px solid var(--border-color);
     border-radius: var(--radius-md);
     color: var(--text);
@@ -218,7 +218,7 @@ a:hover {
 }
 
 .modal {
-    background: var(--bg-white);
+    background: var(--dark2); /* CORRECTION: Utilisation de la couleur de fond des surfaces */
     border-radius: var(--radius-lg);
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
 }
@@ -422,7 +422,7 @@ footer {
 .toast-msg{font-size:0.88rem;line-height:1.5}
 
 /* ───── LOADER ───── */
-#app-loader{position:fixed;inset:0;background:var(--bg-white);z-index:9998;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1rem;transition:opacity 0.5s}
+#app-loader{position:fixed;inset:0;background:var(--dark);z-index:9998;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1rem;transition:opacity 0.5s}
 #app-loader.hide{opacity:0;pointer-events:none}
 .loader-logo{font-family:var(--font-family);font-size:2rem;font-weight:700;color:var(--text-dark)}
 .loader-logo span{color:var(--blue-royal)}
@@ -450,7 +450,7 @@ footer {
 .step{display:flex;align-items:center;gap:0.6rem;flex-shrink:0}
 .step-num{width:32px;height:32px;border-radius:50%;border:2px solid var(--border-color);display:flex;align-items:center;justify-content:center;font-size:0.8rem;color:var(--text-muted);font-weight:600;transition:all var(--transition)}
 .step.active .step-num{border-color:var(--blue-royal);color:var(--blue-royal);}
-.step.done .step-num{background:var(--blue);border-color:var(--blue);color:var(--bg-white);font-weight:700}
+.step.done .step-num{background:var(--blue);border-color:var(--blue);color:var(--text);font-weight:700}
 .step-label{font-size:0.85rem;color:var(--text-muted);font-weight:500;transition:all var(--transition)}
 .step.active .step-label{color:var(--text-dark)}
 .step-line{flex:1;min-width:40px;height:2px;background:var(--border-color);margin:0 0.5rem}
@@ -462,7 +462,7 @@ footer {
 .dash-tab.active{background:var(--dark3);color:var(--blue);border-color: var(--border-color); box-shadow: 0 2px 5px rgba(0,0,0,0.05);}
 
 /* ───── DETAIL PAGE ───── */
-#detail-page{display:none;min-height:100vh;background:var(--bg-white)}
+#detail-page{display:none;min-height:100vh;background:var(--dark)}
 .detail-main{max-width:1100px;margin:0 auto;padding:2rem 2.5rem 5rem;display:grid;grid-template-columns:1fr 380px;gap:3rem;align-items:start}
 .detail-gallery{border-radius:var(--radius-lg);overflow:hidden;background:#e9ecef;aspect-ratio:16/10;margin-bottom:1.5rem;position:relative}
 .gallery-thumb{width:80px;height:60px;border-radius:var(--radius-sm);cursor:pointer;border:2px solid transparent;transition:all var(--transition);overflow:hidden;}
