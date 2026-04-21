@@ -562,6 +562,50 @@ footer {
     background-color: var(--green);
 }
 
+/* ───── PUBLISH MODAL CATEGORY SELECTOR ───── */
+.category-selector {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+.category-selector .sector-card {
+    padding: 1.25rem;
+    cursor: pointer;
+    text-align: center;
+    border: 2px solid transparent;
+    transition: var(--transition);
+    background-color: var(--bg-light);
+}
+.category-selector .sector-card:hover {
+    transform: translateY(-4px);
+    background-color: #fff5e6; /* Orange très clair */
+}
+.category-selector .sector-card.selected {
+    border-color: var(--orange);
+    background-color: #fff5e6;
+    box-shadow: 0 4px 15px rgba(255, 130, 0, 0.1);
+}
+.category-selector .cat-icon { font-size: 1.5rem; margin-bottom: 0.5rem; }
+.category-selector .cat-name { font-family: 'Poppins', sans-serif; font-size: 0.88rem; font-weight: 700; }
+.category-selector .cat-desc { font-size: 0.75rem; color: var(--text-muted); margin-top: 0.25rem; }
+
+/* ───── PRICING CARDS (PLANS) ───── */
+.plan-card .plan-price {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--orange);
+    margin: 1rem 0;
+}
+.plan-card .plan-price span {
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--text-muted);
+}
+.plan-card .btn {
+    margin-top: 1.5rem;
+}
+
 /* ───── BADGES ───── */
 .verified-badge {
     color: var(--green);

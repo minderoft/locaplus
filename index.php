@@ -327,7 +327,7 @@ try {
       <div class="publish-grid">
         <div class="publish-left">
           <div class="section-tag">Vendez. Louez. Proposez.</div>
-          <h3>Donnez une visibilité maximale à votre offre</h3>
+          <h3 class="publish-title">Donnez une visibilité maximale à votre offre</h3>
           <p>Publier sur LocaPlus, c'est simple, rapide et efficace. Rejoignez notre communauté de vendeurs et prestataires de confiance et touchez des milliers de clients potentiels chaque jour.</p>
           <div class="publish-features">
             <div class="pub-feat">
@@ -364,7 +364,7 @@ try {
           <p class="section-tag">Choisir un forfait</p>
           <div class="plans-wrapper">
             <div class="plans-grid" id="plans-grid">
-              <div class="plan-card selected" data-plan="starter" data-price="5000" onclick="selectPlan(this)">
+              <div class="plan-card" data-plan="starter" data-price="5000" onclick="selectPlan(this)">
                 <div class="plan-name">Starter</div>
                 <div class="plan-price">5 000 <span>FCFA</span></div>
                 <div class="plan-features">
@@ -373,8 +373,9 @@ try {
                   <div class="plan-feat">30 jours de visibilité</div>
                   <div class="plan-feat">Messagerie intégrée</div>
                 </div>
+                <button class="btn btn-secondary btn-full" onclick="requireAuth(()=>openPublishModal('starter'))">Choisir Starter</button>
               </div>
-              <div class="plan-card" data-plan="pro" data-price="15000" onclick="selectPlan(this)">
+              <div class="plan-card selected" data-plan="pro" data-price="15000" onclick="selectPlan(this)">
                 <div class="plan-popular">Populaire</div>
                 <div class="plan-name">Pro</div>
                 <div class="plan-price">15 000 <span>FCFA</span></div>
@@ -385,6 +386,7 @@ try {
                   <div class="plan-feat">Badge vérifié</div>
                   <div class="plan-feat">Mise en avant</div>
                 </div>
+                <button class="btn btn-primary btn-full" onclick="requireAuth(()=>openPublishModal('pro'))">Choisir Pro</button>
               </div>
               <div class="plan-card" data-plan="business" data-price="35000" onclick="selectPlan(this)">
                 <div class="plan-name">Business</div>
@@ -396,13 +398,10 @@ try {
                   <div class="plan-feat">Badge Professionnel</div>
                   <div class="plan-feat">Support prioritaire</div>
                 </div>
+                <button class="btn btn-secondary btn-full" onclick="requireAuth(()=>openPublishModal('business'))">Choisir Business</button>
               </div>
             </div>
           </div>
-          <button class="btn btn-primary btn-full btn-lg" onclick="requireAuth(()=>openPublishModal())">
-            📝 <span class="btn-text">Publier mon annonce</span><span class="btn-spinner"></span>
-          </button>
-          <p class="payment-secure-notice">Paiement sécurisé via <strong>Paystack</strong> · SSL/TLS · PCI DSS</p>
         </div>
       </div>
     </div>
@@ -707,26 +706,26 @@ try {
       <div id="pub-s1"> 
         <p class="form-section-title">Choisissez la catégorie</p> 
         <div class="category-selector">
-          <div class="sector-card immo" id="cat-immo" onclick="selectCategory('immo')">
+          <button class="sector-card immo" id="cat-immo" onclick="selectCategory('immo')">
             <div class="cat-icon">🏠</div>
             <div class="cat-name">Immobilier</div>
             <div class="cat-desc">Bien & terrain</div>
-          </div>
-          <div class="sector-card veh" id="cat-veh" onclick="selectCategory('veh')">
+          </button>
+          <button class="sector-card veh" id="cat-veh" onclick="selectCategory('veh')">
             <div class="cat-icon">🚗</div>
             <div class="cat-name">Véhicules</div>
             <div class="cat-desc">Auto & moto</div>
-          </div>
-          <div class="sector-card btp" id="cat-btp" onclick="selectCategory('btp')">
+          </button>
+          <button class="sector-card btp" id="cat-btp" onclick="selectCategory('btp')">
             <div class="cat-icon">🏗️</div>
             <div class="cat-name">BTP</div>
             <div class="cat-desc">Engins & matériel</div>
-          </div>
-          <div class="sector-card tech" id="cat-tech" onclick="selectCategory('tech')">
+          </button>
+          <button class="sector-card tech" id="cat-tech" onclick="selectCategory('tech')">
             <div class="cat-icon">🛠️</div>
             <div class="cat-name">Technicien</div>
             <div class="cat-desc">Artisan & service</div>
-          </div>
+          </button>
         </div>
         <div class="form-group" id="fg-cat-type">
           <label class="form-label">Type d'annonce <span class="required">*</span></label>
