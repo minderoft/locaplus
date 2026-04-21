@@ -138,14 +138,14 @@ try {
     <li><a onclick="openContactGeneral()">Contact</a></li>
   </ul>
   <div class="nav-right">
-    <div class="nav-user" id="nav-user">
+    <div class="nav-user" id="nav-user" style="display:none;">
       <div class="nav-notif btn btn-icon btn-ghost" onclick="openDashboard('messages')">
         🔔<span class="notif-dot" id="notif-dot" style="display:none"></span>
       </div>
       <div class="user-avatar" id="user-avatar" onclick="openDashboard('annonces')">?</div>
       <button class="btn btn-ghost" onclick="logout()">Déconnexion</button>
     </div>
-    <div id="nav-auth" style="display:flex;gap:0.6rem">
+    <div id="nav-auth" style="display:flex; gap:0.6rem;">
       <button class="btn btn-ghost" onclick="openModal('auth-modal');showAuthTab('login')">Connexion</button>
       <button class="btn btn-primary" onclick="openModal('auth-modal');showAuthTab('register')">S'inscrire</button>
     </div>
@@ -168,7 +168,7 @@ try {
 <div id="home-page">
 
   <!-- HERO -->
-  <section id="hero" class="section" style="">
+  <section id="hero" class="section">
     <div class="hero-mesh"></div>
     <div class="hero-badge">✨ La référence multiservices en Côte d'Ivoire</div>
     <h1>Votre recherche s'arrête ici.<br><em>Commencez votre projet.</em></h1>
@@ -194,7 +194,7 @@ try {
         <button class="s-tab <?php echo $currentListingType == 'tech' ? 'active' : ''; ?>" id="stab-tech" onclick="switchSearchTab('tech')">🛠️ Techniciens</button>
       </div>
       <div class="search-box">
-        <span style="font-size:1.1rem;flex-shrink:0">🔍</span>
+        <span>🔍</span>
         <input type="text" id="search-input" placeholder="Appartement 3 pièces à Cocody..." oninput="filterListings()" autocomplete="off" maxlength="200" value="<?php echo htmlspecialchars($searchQuery); ?>">
         <button class="btn btn-primary" onclick="filterListings()"><span class="btn-text">Rechercher</span><span class="btn-spinner"></span></button>
       </div>
@@ -271,16 +271,16 @@ try {
       </div>
       <div class="card-grid" id="listings-grid">
         <?php if (!$db_connected): // Check if DB connection failed ?>
-          <div class="grid-placeholder error" style="grid-column: 1 / -1; text-align:center; padding:3rem; color:var(--red); background: rgba(255,69,58,0.05); border: 1px solid rgba(255,69,58,0.1); border-radius: var(--radius-lg);">
+          <div class="grid-placeholder error" style="grid-column: 1 / -1;">
             <div class="placeholder-icon">🔌</div>
             <p class="placeholder-title">Erreur de connexion à la base de données.</p>
             <p>Impossible de charger les annonces. Veuillez vérifier la configuration du serveur.</p>
           </div>
         <?php elseif (empty($displayListings)): // If connected but no listings ?>
-          <div class="grid-placeholder" style="grid-column: 1 / -1; text-align:center; padding:3rem; color:var(--text-muted);">
+          <div class="grid-placeholder" style="grid-column: 1 / -1;">
             <div class="placeholder-icon">🔍</div>
             <p>Aucune annonce trouvée pour cette recherche.</p>
-            <button class="btn btn-ghost" onclick="resetFilters()" style="margin-top:1rem">Réinitialiser les filtres</button>
+            <button class="btn btn-ghost" onclick="resetFilters()">Réinitialiser les filtres</button>
           </div>
         <?php else: ?>
           <?php foreach ($displayListings as $l):
@@ -685,8 +685,8 @@ try {
 </div>
 
 <!-- PUBLISH MODAL -->
-<div class="modal-overlay publish-modal" id="publish-modal" onclick="handleOverlayClick(event,'publish-modal')" style="display:none;">
-  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="publish-modal-title" style="max-width:740px">
+<div class="modal-overlay publish-modal" id="publish-modal" onclick="handleOverlayClick(event,'publish-modal')">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="publish-modal-title">
     <div class="modal-header">
       <div class="modal-title" id="publish-modal-title">📝 Publier une annonce</div>
       <button class="modal-close" onclick="closeModal('publish-modal')" aria-label="Fermer">✕</button>
@@ -890,7 +890,7 @@ try {
 </div>
 
 <!-- PAYMENT MODAL -->
-<div class="modal-overlay payment-modal" id="payment-modal" onclick="handleOverlayClick(event,'payment-modal')" style="display:none;">
+<div class="modal-overlay payment-modal" id="payment-modal" onclick="handleOverlayClick(event,'payment-modal')">
   <div class="modal" role="dialog" aria-modal="true" aria-labelledby="payment-modal-title">
     <div class="modal-header">
       <div class="modal-title" id="payment-modal-title">💳 Finaliser le paiement</div>
@@ -913,8 +913,8 @@ try {
 </div>
 
 <!-- MESSAGE MODAL -->
-<div class="modal-overlay" id="message-modal" onclick="handleOverlayClick(event,'message-modal')" style="display:none;">
-  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="msg-modal-title" style="max-width:460px">
+<div class="modal-overlay" id="message-modal" onclick="handleOverlayClick(event,'message-modal')">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="msg-modal-title">
     <div class="modal-header">
       <div class="modal-title" id="msg-modal-title">💬 Message</div>
       <button class="modal-close" onclick="closeModal('message-modal')">✕</button>
@@ -931,13 +931,13 @@ try {
 </div>
 
 <!-- CALL MODAL -->
-<div class="modal-overlay" id="call-modal" onclick="handleOverlayClick(event,'call-modal')" style="display:none;">
-  <div class="modal" role="dialog" aria-modal="true" style="max-width:400px">
+<div class="modal-overlay" id="call-modal" onclick="handleOverlayClick(event,'call-modal')">
+  <div class="modal" role="dialog" aria-modal="true">
     <div class="modal-header">
       <div class="modal-title">📞 Contacter le propriétaire</div>
       <button class="modal-close" onclick="closeModal('call-modal')">✕</button>
     </div>
-    <div class="modal-body call-modal-body" style="text-align:center;padding:2rem">
+    <div class="modal-body call-modal-body">
       <div class="call-icon">📞</div>
       <div class="call-number" id="call-number">+225 07 00 00 00 00</div>
       <div class="call-name" id="call-name">Propriétaire</div>
@@ -950,8 +950,8 @@ try {
 </div>
 
 <!-- CONTACT GENERAL MODAL -->
-<div class="modal-overlay contact-modal" id="contact-modal" onclick="handleOverlayClick(event,'contact-modal')" style="display:none;">
-  <div class="modal" role="dialog" aria-modal="true" style="max-width:440px">
+<div class="modal-overlay contact-modal" id="contact-modal" onclick="handleOverlayClick(event,'contact-modal')">
+  <div class="modal" role="dialog" aria-modal="true">
     <div class="modal-header">
       <div class="modal-title">📞 Contacter LocaPlus</div>
       <button class="modal-close" onclick="closeModal('contact-modal')">✕</button>
@@ -987,8 +987,8 @@ try {
 </div>
 
 <!-- FORGOT PASSWORD MODAL -->
-<div class="modal-overlay" id="forgot-modal" onclick="handleOverlayClick(event,'forgot-modal')" style="display:none;">
-  <div class="modal" style="max-width:400px">
+<div class="modal-overlay" id="forgot-modal" onclick="handleOverlayClick(event,'forgot-modal')">
+  <div class="modal">
     <div class="modal-header">
       <div class="modal-title">🔒 Mot de passe oublié</div>
       <button class="modal-close" onclick="closeModal('forgot-modal')">✕</button>

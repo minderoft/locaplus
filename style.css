@@ -55,6 +55,13 @@ a {
     background: var(--bg-white);
     border-bottom: 1px solid var(--border-color);
     transition: var(--transition);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    background: rgba(255, 255, 255, 0.85);
+}
+
+.nav-logo {
+    cursor: pointer;
 }
 
 .nav-links a {
@@ -256,6 +263,10 @@ a {
     background: rgba(33, 37, 41, 0.6);
     backdrop-filter: blur(5px);
 }
+.modal-overlay.open {
+    display: flex;
+}
+
 
 .modal {
     position: relative;
@@ -531,6 +542,10 @@ footer {
     display: block;
 }
 
+/* ───── STRUCTURE DE PAGE ───── */
+#detail-page, #dashboard {
+    display: none; /* Masquer les pages non actives */
+}
 /* ───── FORFAITS (PLANS) ───── */
 .plan-card.selected {
     border-color: var(--orange);
