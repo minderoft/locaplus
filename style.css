@@ -103,6 +103,11 @@ a {
     border-color: rgba(255, 255, 255, 0.2);
 }
 
+.btn-ghost {
+    background-color: transparent;
+    color: var(--muted);
+}
+
 /* ───── 4. CARTES D'ANNONCES (Card Design) ───── */
 .card-grid {
     display: grid;
@@ -182,7 +187,7 @@ a {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    border-top: 1px solid #f1f3f5;
+    border-top: 1px solid var(--border-color);
     padding-top: 1rem;
 }
 
@@ -217,11 +222,19 @@ a {
 
 /* ───── 6. MODALS ───── */
 .modal-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 1050;
+    display: none; /* Masqué par défaut */
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
     background: rgba(0, 0, 0, 0.7);
     backdrop-filter: blur(8px);
 }
 
 .modal {
+    position: relative;
     background: var(--dark2);
     border-radius: var(--radius-lg);
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
@@ -501,7 +514,9 @@ footer {
 }
 
 /* Styles pour les éléments non redéfinis */
-.hamburger, .nav-user, #mobile-menu, #auth-modal, #publish-modal, #payment-modal, #message-modal, #call-modal, #contact-modal, #forgot-modal, #dashboard, #success-page, .cta-wrap {
+.hamburger, .nav-user, #auth-modal, #publish-modal, #payment-modal, #message-modal, #call-modal, #contact-modal, #forgot-modal, #success-page, .cta-wrap {
     /* Ces éléments conserveront leurs styles de base (display, position, etc.) 
        mais bénéficieront des nouvelles variables de couleur, police et radius. */
 }
+
+/* Le reste du CSS est déjà bien structuré... */

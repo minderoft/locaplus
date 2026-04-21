@@ -154,7 +154,7 @@ try {
 </nav>
 
 <!-- Mobile Menu -->
-<div id="mobile-menu">
+<div id="mobile-menu" style="display:none;">
   <a onclick="showPage('home');toggleMenu()">🏠 Accueil</a>
   <a onclick="scrollToSection('listings-section');toggleMenu()">📋 Annonces</a>
   <a onclick="scrollToSection('publish-section');toggleMenu()">📝 Publier</a>
@@ -168,7 +168,7 @@ try {
 <div id="home-page">
 
   <!-- HERO -->
-  <section id="hero">
+  <section id="hero" class="section">
     <div class="hero-mesh"></div>
     <div class="hero-badge">✨ La référence multiservices en Côte d'Ivoire</div>
     <h1>Votre recherche s'arrête ici.<br><em>Commencez votre projet.</em></h1>
@@ -271,13 +271,13 @@ try {
       </div>
       <div class="card-grid" id="listings-grid">
         <?php if (!$db_connected): // Check if DB connection failed ?>
-          <div class="grid-placeholder error">
+          <div class="grid-placeholder error" style="grid-column: 1 / -1;">
             <div class="placeholder-icon">🔌</div>
             <p class="placeholder-title">Erreur de connexion à la base de données.</p>
             <p>Impossible de charger les annonces. Veuillez vérifier la configuration du serveur.</p>
           </div>
         <?php elseif (empty($displayListings)): // If connected but no listings ?>
-          <div class="grid-placeholder">
+          <div class="grid-placeholder" style="grid-column: 1 / -1;">
             <div class="placeholder-icon">🔍</div>
             <p>Aucune annonce trouvée pour cette recherche.</p>
             <button class="btn btn-ghost" onclick="resetFilters()">Réinitialiser les filtres</button>
@@ -511,7 +511,7 @@ try {
     <div>
       <div class="detail-gallery" id="detail-main-img"><span id="detail-emoji">🏢</span></div>
       <div class="gallery-thumbs" id="gallery-thumbs"></div>
-      <div class="detail-content-wrap">
+      <div class="detail-content-wrap" style="margin-top:2rem">
         <div class="detail-header">
           <h1 class="detail-title" id="detail-title">-</h1>
           <button class="btn btn-icon btn-ghost" id="detail-fav-btn" onclick="toggleDetailFav()" title="Ajouter aux favoris">🤍</button>
@@ -519,7 +519,7 @@ try {
         <div class="detail-loc" id="detail-loc">📍 -</div>
         <div class="detail-tags" id="detail-tags"></div>
         <div class="detail-desc">
-          <h3>Description</h3>
+          <h3 style="margin-top:2rem">Description</h3>
           <p id="detail-desc">-</p>
         </div>
       </div>
@@ -527,7 +527,7 @@ try {
     <div class="detail-sidebar">
       <div class="detail-price-card">
         <div class="detail-price" id="detail-price">-</div>
-        <div class="detail-price-unit" id="detail-price-unit">-</div>
+        <div class="detail-price-unit" id="detail-price-unit" style="font-size:0.82rem;color:var(--muted)">-</div>
         <div class="detail-seller">
           <div class="seller-avatar" id="seller-avatar">?</div>
           <div>
@@ -553,7 +553,7 @@ try {
 <!-- ─── DASHBOARD ─── -->
 <div id="dashboard">
   <div class="dash-header">
-    <div class="dash-header-inner">
+    <div class="dash-header-inner" style="display:flex;align-items:center;justify-content:space-between">
       <div>
         <div class="section-tag">Espace personnel</div>
         <h2 class="dash-title" id="dash-welcome">Mon tableau de bord</h2>
@@ -685,7 +685,7 @@ try {
 </div>
 
 <!-- PUBLISH MODAL -->
-<div class="modal-overlay publish-modal" id="publish-modal" onclick="handleOverlayClick(event,'publish-modal')">
+<div class="modal-overlay publish-modal" id="publish-modal" onclick="handleOverlayClick(event,'publish-modal')" style="display:none;">
   <div class="modal" role="dialog" aria-modal="true" aria-labelledby="publish-modal-title" style="max-width:740px">
     <div class="modal-header">
       <div class="modal-title" id="publish-modal-title">📝 Publier une annonce</div>
@@ -821,7 +821,7 @@ try {
         </div>
         <div class="form-group" id="fg-pub-desc">
           <label class="form-label">Description <span class="required">*</span></label>
-          <textarea class="form-textarea" id="pub-desc" placeholder="Décrivez votre bien en détail : état, équipements, avantages, conditions..." style="min-height:130px" maxlength="2000"></textarea>
+          <textarea class="form-textarea" id="pub-desc" placeholder="Décrivez votre bien en détail : état, équipements, avantages, conditions..." maxlength="2000"></textarea>
           <div style="display:flex;justify-content:space-between;margin-top:0.3rem">
             <div class="form-error" id="err-pub-desc">Description requise (50+ caractères)</div>
             <div style="font-size:0.72rem;color:var(--muted)" id="desc-counter">0/2000</div>
@@ -890,7 +890,7 @@ try {
 </div>
 
 <!-- PAYMENT MODAL -->
-<div class="modal-overlay payment-modal" id="payment-modal" onclick="handleOverlayClick(event,'payment-modal')">
+<div class="modal-overlay payment-modal" id="payment-modal" onclick="handleOverlayClick(event,'payment-modal')" style="display:none;">
   <div class="modal" role="dialog" aria-modal="true" aria-labelledby="payment-modal-title">
     <div class="modal-header">
       <div class="modal-title" id="payment-modal-title">💳 Finaliser le paiement</div>
@@ -913,7 +913,7 @@ try {
 </div>
 
 <!-- MESSAGE MODAL -->
-<div class="modal-overlay" id="message-modal" onclick="handleOverlayClick(event,'message-modal')">
+<div class="modal-overlay" id="message-modal" onclick="handleOverlayClick(event,'message-modal')" style="display:none;">
   <div class="modal" role="dialog" aria-modal="true" aria-labelledby="msg-modal-title" style="max-width:460px">
     <div class="modal-header">
       <div class="modal-title" id="msg-modal-title">💬 Message</div>
@@ -931,13 +931,13 @@ try {
 </div>
 
 <!-- CALL MODAL -->
-<div class="modal-overlay" id="call-modal" onclick="handleOverlayClick(event,'call-modal')">
+<div class="modal-overlay" id="call-modal" onclick="handleOverlayClick(event,'call-modal')" style="display:none;">
   <div class="modal" role="dialog" aria-modal="true" style="max-width:400px">
     <div class="modal-header">
       <div class="modal-title">📞 Contacter le propriétaire</div>
       <button class="modal-close" onclick="closeModal('call-modal')">✕</button>
     </div>
-    <div class="modal-body call-modal-body">
+    <div class="modal-body call-modal-body" style="text-align:center;padding:2rem">
       <div class="call-icon">📞</div>
       <div class="call-number" id="call-number">+225 07 00 00 00 00</div>
       <div class="call-name" id="call-name">Propriétaire</div>
@@ -950,7 +950,7 @@ try {
 </div>
 
 <!-- CONTACT GENERAL MODAL -->
-<div class="modal-overlay contact-modal" id="contact-modal" onclick="handleOverlayClick(event,'contact-modal')">
+<div class="modal-overlay contact-modal" id="contact-modal" onclick="handleOverlayClick(event,'contact-modal')" style="display:none;">
   <div class="modal" role="dialog" aria-modal="true" style="max-width:440px">
     <div class="modal-header">
       <div class="modal-title">📞 Contacter LocaPlus</div>
@@ -987,7 +987,7 @@ try {
 </div>
 
 <!-- FORGOT PASSWORD MODAL -->
-<div class="modal-overlay" id="forgot-modal" onclick="handleOverlayClick(event,'forgot-modal')">
+<div class="modal-overlay" id="forgot-modal" onclick="handleOverlayClick(event,'forgot-modal')" style="display:none;">
   <div class="modal" style="max-width:400px">
     <div class="modal-header">
       <div class="modal-title">🔒 Mot de passe oublié</div>
