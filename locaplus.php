@@ -23,7 +23,7 @@ $displayListings = [];   // To store filtered/paginated listings for PHP renderi
 
 $activeListingsCount = '0'; // Valeur par défaut
 try {
-    if ($db_connected) { 
+    if ($db_connected) {
         // Fetch all listings for client-side JS functions like openDetail
         $stmtAll = $pdo->query("SELECT * FROM listings WHERE status = 'active' ORDER BY createdAt DESC");
         $allListingsFromDB = $stmtAll->fetchAll(PDO::FETCH_ASSOC);
@@ -42,7 +42,7 @@ try {
             $params[':searchQuery'] = '%' . $searchQuery . '%';
         }
         if (!empty($filterType)) {
-            $whereClauses[] = "subcat = :filterType";
+            $whereClauses[] = "subcat = :filterType"; // Assuming subcat maps to filter-type
             $params[':filterType'] = $filterType;
         }
         if (!empty($filterVille)) {
@@ -50,7 +50,7 @@ try {
             $params[':filterVille'] = '%' . $filterVille . '%';
         }
         if (!empty($filterOffre)) {
-            $whereClauses[] = "badge = :filterOffre";
+            $whereClauses[] = "badge = :filterOffre"; // Assuming badge maps to filter-offre
             $params[':filterOffre'] = $filterOffre;
         }
         // CORRECTION: Logique de filtrage par budget améliorée
@@ -89,7 +89,6 @@ try {
     }
     // Si la connexion échoue, $db_connected est false et le bloc ci-dessus est ignoré.
     // $displayListings et $allListingsFromDB restent des tableaux vides.
-    // Le message d'erreur sera affiché dans le HTML.
 
 } catch (PDOException $e) {
     error_log("Error fetching listings: " . $e->getMessage());
@@ -263,10 +262,10 @@ try {
           <h2 class="section-title">Sélection du moment</h2>
         </div>
         <div class="listing-tabs" id="listing-tabs">
-            <button class="l-tab <?php echo $currentListingType == 'immo' ? 'active' : ''; ?>" id="ltab-immo" onclick="switchListingTab('immo')">🏠 Immobilier</button>
-            <button class="l-tab <?php echo $currentListingType == 'veh' ? 'active' : ''; ?>" id="ltab-veh" onclick="switchListingTab('veh')">🚗 Véhicules</button>
-            <button class="l-tab <?php echo $currentListingType == 'btp' ? 'active' : ''; ?>" id="ltab-btp" onclick="switchListingTab('btp')">🏗️ BTP</button>
-            <button class="l-tab <?php echo $currentListingType == 'tech' ? 'active' : ''; ?>" id="ltab-tech" onclick="switchListingTab('tech')">🛠️ Techniciens</button>
+          <button class="l-tab <?php echo $currentListingType == 'immo' ? 'active' : ''; ?>" id="ltab-immo" onclick="switchListingTab('immo')">🏠 Immobilier</button>
+          <button class="l-tab <?php echo $currentListingType == 'veh' ? 'active' : ''; ?>" id="ltab-veh" onclick="switchListingTab('veh')">🚗 Véhicules</button>
+          <button class="l-tab <?php echo $currentListingType == 'btp' ? 'active' : ''; ?>" id="ltab-btp" onclick="switchListingTab('btp')">🏗️ BTP</button>
+          <button class="l-tab <?php echo $currentListingType == 'tech' ? 'active' : ''; ?>" id="ltab-tech" onclick="switchListingTab('tech')">🛠️ Techniciens</button>
         </div>
       </div>
       <div class="card-grid" id="listings-grid">
@@ -320,6 +319,7 @@ try {
       </div>
     </div>
   </section>
+ 
 
   <!-- PUBLISH SECTION -->
   <section id="publish-section" class="section">
@@ -797,28 +797,47 @@ try {
             <input type="number" class="form-input" id="pub-prix" placeholder="Ex: 250000" min="0" max="9999999999">
             <div class="form-error" id="err-pub-prix">Prix invalide</div>
           </div>
-          <div class="form-group" id="fg-pub-surface">
-            <label class="form-label" id="lbl-surface">Surface (m²)</label>
-            <input type="number" class="form-input" id="pub-surface" placeholder="Ex: 80" min="0" max="99999">
-          </div>
         </div>
-        <div class="form-group" id="pub-immo-fields">
-          <div class="form-row">
-            <div class="form-group">
-              <label class="form-label">Nombre de pièces</label>
-              <select class="form-select" id="pub-pieces">
-                <option value="">-</option><option>Studio</option><option>1 pièce</option>
-                <option>2 pièces</option><option>3 pièces</option><option>4 pièces</option><option>5+ pièces</option>
-              </select>
-            </div>
-            <div class="form-group">
-              <label class="form-label">Meublé ?</label>
-              <select class="form-select" id="pub-meuble">
-                <option value="">-</option><option>Meublé</option><option>Non meublé</option>
-              </select>
+
+        <!-- Champs dynamiques par catégorie -->
+        <div class="form-fields-wrapper">
+          <!-- IMMOBILIER -->
+          <div class="form-fields-group form-fields-immo" style="display: none;">
+            <div class="form-row">
+              <div class="form-group"><label class="form-label">Surface (m²)</label><input type="number" class="form-input" id="pub-immo-surface" placeholder="Ex: 80"></div>
+              <div class="form-group"><label class="form-label">Nombre de pièces</label><select class="form-select" id="pub-immo-pieces"><option value="">-</option><option>Studio</option><option>2 pièces</option><option>3 pièces</option><option>4 pièces</option><option>5+ pièces</option></select></div>
+              <div class="form-group"><label class="form-label">Étage</label><select class="form-select" id="pub-immo-etage"><option value="">-</option><option>RDC</option><option>1er</option><option>2ème</option><option>3ème</option><option>4ème et +</option></select></div>
             </div>
           </div>
+          <!-- VEHICULE -->
+          <div class="form-fields-group form-fields-veh" style="display: none;">
+            <div class="form-row">
+              <div class="form-group"><label class="form-label">Marque</label><input type="text" class="form-input" id="pub-veh-marque" placeholder="Ex: Toyota"></div>
+              <div class="form-group"><label class="form-label">Modèle</label><input type="text" class="form-input" id="pub-veh-modele" placeholder="Ex: Prado"></div>
+            </div>
+            <div class="form-row">
+              <div class="form-group"><label class="form-label">Kilométrage</label><input type="number" class="form-input" id="pub-veh-km" placeholder="Ex: 45000"></div>
+              <div class="form-group"><label class="form-label">Carburant</label><select class="form-select" id="pub-veh-carburant"><option value="">-</option><option>Essence</option><option>Diesel</option><option>Hybride</option><option>Électrique</option></select></div>
+            </div>
+          </div>
+          <!-- BTP -->
+          <div class="form-fields-group form-fields-btp" style="display: none;">
+            <div class="form-row">
+              <div class="form-group"><label class="form-label">Capacité / Tonnage</label><input type="text" class="form-input" id="pub-btp-capacite" placeholder="Ex: 20T"></div>
+              <div class="form-group"><label class="form-label">Année du modèle</label><input type="number" class="form-input" id="pub-btp-annee" placeholder="Ex: 2018" min="1980" max="2025"></div>
+            </div>
+          </div>
+          <!-- TECHNICIEN -->
+          <div class="form-fields-group form-fields-tech" style="display: none;">
+            <div class="form-row">
+              <div class="form-group"><label class="form-label">Années d'expérience</label><input type="number" class="form-input" id="pub-tech-experience" placeholder="Ex: 5"></div>
+              <div class="form-group"><label class="form-label">Spécialité principale</label><input type="text" class="form-input" id="pub-tech-specialite" placeholder="Ex: Climatisation centrale"></div>
+            </div>
+            <div class="form-group"><label class="form-label">Diplômes / Certifications</label><input type="text" class="form-input" id="pub-tech-certs" placeholder="Ex: CAP Froid et Climatisation (optionnel)"></div>
+          </div>
         </div>
+        <!-- Fin des champs dynamiques -->
+
         <div class="form-group" id="fg-pub-desc">
           <label class="form-label">Description <span class="required">*</span></label>
           <textarea class="form-textarea" id="pub-desc" placeholder="Décrivez votre bien en détail : état, équipements, avantages, conditions..." style="min-height:130px" maxlength="2000"></textarea>

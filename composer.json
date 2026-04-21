@@ -1,0 +1,11 @@
+{
+    "name": "locaplus/website",
+    "description": "Plateforme multiservices LocaPlus",
+    "type": "project",
+    "require": {
+        "php": "^8.2",
+        "ext-pdo_mysql": "*",
+        "ext-mysqli": "*",
+        "ext-curl": "*"
+    }
+}
