@@ -439,16 +439,16 @@ try {
   </section>
 
   <!-- CTA -->
-  <div class="cta-wrap">
+  <section class="cta-wrap section">
     <div class="cta-inner">
       <h2>Lancez-vous sur LocaPlus dès aujourd'hui</h2>
       <p>Créez un compte gratuit et commencez à explorer, publier et échanger sur la plateforme multiservices la plus complète de Côte d'Ivoire.</p>
       <div class="cta-btns">
         <button class="btn btn-primary btn-lg" onclick="requireAuth(()=>openPublishModal())">Créer mon annonce</button>
-        <button class="btn btn-secondary btn-lg" onclick="openModal('auth-modal');showAuthTab('register')">Créer un compte</button>
+        <button class="btn btn-secondary btn-lg" onclick="openModal('auth-modal');showAuthTab('register')">Ouvrir un compte</button>
       </div>
     </div>
-  </div>
+  </section>
 
   <!-- FOOTER -->
   <footer>
