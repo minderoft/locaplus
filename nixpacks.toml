@@ -1,0 +1,15 @@
+# Fichier de configuration pour Nixpacks (utilisé par Railway)
+# https://nixpacks.com/docs/configuration/file
+
+[phases.setup]
+# Installe les extensions PHP nécessaires pour l'application.
+# Assurez-vous que la version de PHP (ex: php82) correspond à celle de votre projet.
+nixPkgs = [
+    "php82Extensions.pdo_mysql",
+    "php82Extensions.mysqli",
+    "php82Extensions.curl"
+]
+
+[start]
+# Commande pour démarrer le serveur Apache avec le dossier courant comme racine.
+cmd = "heroku-php-apache2 ."

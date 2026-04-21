@@ -6,6 +6,7 @@ if (!extension_loaded('pdo_mysql')) {
             <p>L'extension PHP <strong>pdo_mysql</strong> n'est pas chargée. Le site ne peut pas se connecter à la base de données. Veuillez l'activer dans votre fichier <strong>php.ini</strong>.</p>
          </div>");
 }
+require_once 'security_init.php';
 require_once 'db_connect.php';
 
 // Génération et stockage du token CSRF s'il n'existe pas
@@ -27,12 +28,9 @@ $limit = 6; // Number of listings to display per page
 $allListingsFromDB = []; // To store all listings for JS App.allListings
 $displayListings = [];   // To store filtered/paginated listings for PHP rendering
 
-$activeListingsCount = 'N/A'; // Valeur par défaut si la connexion échoue ou si aucune annonce
+$activeListingsCount = '0'; // Valeur par défaut
 try {
-    // Correction de l'erreur "Found null" : La vérification `if ($db_connected)` est la bonne pratique.
-    // Elle garantit que le code suivant n'est exécuté que si la connexion a réussi.
-    // Si $db_connected est false, les requêtes sont ignorées, évitant toute erreur sur un objet $pdo qui serait null.
-    if ($db_connected) { 
+    if ($db_connected) {
         // Fetch all listings for client-side JS functions like openDetail
         $stmtAll = $pdo->query("SELECT * FROM listings WHERE status = 'active' ORDER BY createdAt DESC");
         $allListingsFromDB = $stmtAll->fetchAll(PDO::FETCH_ASSOC);
@@ -55,25 +53,24 @@ try {
             $params[':filterType'] = $filterType;
         }
         if (!empty($filterVille)) {
-            $whereClauses[] = "location LIKE :filterVille"; // Simple match, could be more precise
+            $whereClauses[] = "location LIKE :filterVille";
             $params[':filterVille'] = '%' . $filterVille . '%';
         }
         if (!empty($filterOffre)) {
             $whereClauses[] = "badge = :filterOffre"; // Assuming badge maps to filter-offre
             $params[':filterOffre'] = $filterOffre;
         }
-        // Handle filterBudget (more complex, needs parsing ranges)
+        // CORRECTION: Logique de filtrage par budget améliorée
         if (!empty($filterBudget)) {
-            list($min, $max) = explode('-', $filterBudget);
-            if ($min !== '') {
+            if (strpos($filterBudget, '+') !== false) {
+                $min = (int)str_replace('+', '', $filterBudget);
                 $whereClauses[] = "price >= :minBudget";
-                $params[':minBudget'] = (int)($min * 1000); // Assuming k for thousands
-            }
-            if ($max !== '' && $max !== '+') {
-                $whereClauses[] = "price <= :maxBudget";
-                $params[':maxBudget'] = (int)($max * 1000);
-            } elseif ($max === '+') {
-                // No upper bound needed
+                $params[':minBudget'] = $min * 1000;
+            } else {
+                list($min, $max) = explode('-', $filterBudget);
+                $whereClauses[] = "price BETWEEN :minBudget AND :maxBudget";
+                $params[':minBudget'] = (int)$min * 1000;
+                $params[':maxBudget'] = (int)$max * 1000;
             }
         }
 
@@ -95,16 +92,14 @@ try {
         // Récupère le nombre d'annonces actives pour la section HERO
         $stmtCount = $pdo->query("SELECT COUNT(*) FROM listings WHERE status = 'active'");
         $count = $stmtCount->fetchColumn();
-        // Formate le nombre pour l'affichage (ex: 12 400+)
         $activeListingsCount = ($count > 1000) ? number_format($count, 0, ',', ' ') . '+' : $count;
-    } else {
-        // If connection failed, $displayListings and $allListingsFromDB will remain empty.
-        // The HTML part will show a connection error message.
     }
+    // Si la connexion échoue, $db_connected est false et le bloc ci-dessus est ignoré.
+    // $displayListings et $allListingsFromDB restent des tableaux vides.
 
 } catch (PDOException $e) {
     error_log("Error fetching listings: " . $e->getMessage());
-    $displayListings = []; // Ensure it's an empty array on error
+    $displayListings = [];
     $allListingsFromDB = [];
 }
 ?>
@@ -113,11 +108,6 @@ try {
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta http-equiv="X-Content-Type-Options" content="nosniff">
-<meta http-equiv="X-Frame-Options" content="DENY">
-<meta http-equiv="X-XSS-Protection" content="1; mode=block">
-<meta name="referrer" content="strict-origin-when-cross-origin">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://js.paystack.co https://fonts.googleapis.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: blob:; connect-src 'self' https://api.paystack.co;">
 <title>LocaPlus — Plateforme Multiservices</title> 
 
 <!-- Balises pour PWA et expérience mobile -->
@@ -278,7 +268,7 @@ try {
           <div class="section-tag">Annonces récentes</div>
           <h2 class="section-title">Sélection du moment</h2>
         </div>
-        <div class="listing-tabs">
+        <div class="listing-tabs" id="listing-tabs">
           <button class="l-tab <?php echo $currentListingType == 'immo' ? 'active' : ''; ?>" id="ltab-immo" onclick="switchListingTab('immo')">🏠 Immobilier</button>
           <button class="l-tab <?php echo $currentListingType == 'veh' ? 'active' : ''; ?>" id="ltab-veh" onclick="switchListingTab('veh')">🚗 Véhicules</button>
           <button class="l-tab <?php echo $currentListingType == 'btp' ? 'active' : ''; ?>" id="ltab-btp" onclick="switchListingTab('btp')">🏗️ BTP</button>
