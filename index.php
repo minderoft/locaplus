@@ -110,9 +110,10 @@ try {
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="LocaPlus">
 <meta name="application-name" content="LocaPlus">
-<meta name="theme-color" content="#1A73E8">
+<meta name="theme-color" content="#007AFF">
 <!-- <link rel="manifest" href="manifest.json"> -->
-<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 <script src="https://js.paystack.co/v1/inline.js"></script>
 <link rel="stylesheet" href="style.css">
 </head>
@@ -170,7 +171,7 @@ try {
   <section id="hero" class="section">
     <div class="hero-mesh"></div>
     <div class="hero-badge">✨ La référence multiservices en Côte d'Ivoire</div>
-    <h1>Votre recherche s'arrête ici.<br><em>Commencez votre projet.</em></h1>
+    <h1>Trouvez. Louez. Achetez.<br><em>Tout, plus simplement.</em></h1>
     <p>Explorez des milliers d'annonces vérifiées pour l'immobilier, les véhicules, le BTP et les services de techniciens. La solution simple et sécurisée pour tous vos besoins.</p>
     <div class="hero-cta">
       <button class="btn btn-primary btn-lg" onclick="scrollToSection('search-section')">🔍 Rechercher une annonce</button>
@@ -214,39 +215,39 @@ try {
       <p class="section-sub">Fini les recherches interminables. LocaPlus centralise les meilleures offres de quatre secteurs clés pour vous simplifier la vie.</p>
       <div class="sector-grid">
         <div class="sector-card immo" onclick="switchListingTab('immo');scrollToSection('listings-section')">
-          <div class="sector-icon-wrap">🏠</div>
+          <img src="https://images.unsplash.com/photo-1580587771525-78b9dba3b914?q=80&w=1974&auto=format&fit=crop" alt="Immobilier" class="sector-img">
           <h3>Immobilier</h3>
           <p>Appartements meublés, villas, maisons, bureaux et terrains à travers tout le pays. Achat, vente ou location.</p>
           <div class="sector-bottom">
             <div><div class="sector-count-big" id="count-immo">6 800+</div><div class="sector-count-sub">Biens disponibles</div></div>
-            <div class="sector-arr">→</div>
+            <button class="btn btn-secondary">Explorer →</button>
           </div>
         </div>
         <div class="sector-card veh" onclick="switchListingTab('veh');scrollToSection('listings-section')">
-          <div class="sector-icon-wrap">🚗</div>
+          <img src="https://images.unsplash.com/photo-1552519507-da3b142c6e3d?q=80&w=2070&auto=format&fit=crop" alt="Véhicules" class="sector-img">
           <h3>Véhicules</h3>
           <p>Location courte durée, achat de véhicules d'occasion ou neufs. Toutes les marques, toutes les gammes.</p>
           <div class="sector-bottom">
             <div><div class="sector-count-big" id="count-veh">3 200+</div><div class="sector-count-sub">Véhicules listés</div></div>
-            <div class="sector-arr">→</div>
+            <button class="btn btn-secondary">Explorer →</button>
           </div>
         </div>
         <div class="sector-card btp" onclick="switchListingTab('btp');scrollToSection('listings-section')">
-          <div class="sector-icon-wrap">🏗️</div>
+          <img src="https://images.unsplash.com/photo-1581193692459-2541f7349a34?q=80&w=2070&auto=format&fit=crop" alt="BTP & Matériel" class="sector-img">
           <h3>BTP & Matériel</h3>
           <p>Engins de chantier, grues, bétonnières et équipements professionnels. Répondez à vos besoins rapidement.</p>
           <div class="sector-bottom">
             <div><div class="sector-count-big" id="count-btp">2 400+</div><div class="sector-count-sub">Équipements dispo</div></div>
-            <div class="sector-arr">→</div>
+            <button class="btn btn-secondary">Explorer →</button>
           </div>
         </div>
         <div class="sector-card tech" onclick="switchListingTab('tech');scrollToSection('listings-section')">
-          <div class="sector-icon-wrap">🛠️</div>
+          <img src="https://images.unsplash.com/photo-1581822261290-991b38693d1b?q=80&w=2070&auto=format&fit=crop" alt="Techniciens" class="sector-img">
           <h3>Techniciens</h3>
           <p>Plombiers, électriciens, peintres et autres artisans qualifiés pour tous vos travaux et réparations.</p>
           <div class="sector-bottom">
             <div><div class="sector-count-big" id="count-tech">1 500+</div><div class="sector-count-sub">Artisans disponibles</div></div>
-            <div class="sector-arr">→</div>
+            <button class="btn btn-secondary">Explorer →</button>
           </div>
         </div>
       </div>
@@ -443,7 +444,7 @@ try {
       <p>Créez un compte gratuit et commencez à explorer, publier et échanger sur la plateforme multiservices la plus complète de Côte d'Ivoire.</p>
       <div class="cta-btns">
         <button class="btn btn-primary btn-lg" onclick="requireAuth(()=>openPublishModal())">Créer mon annonce</button>
-        <button class="btn btn-secondary btn-lg" onclick="openModal('auth-modal');showAuthTab('register')">Créer un compte</button>
+        <button class="btn btn-secondary btn-lg" onclick="openModal('auth-modal');showAuthTab('register')">Ouvrir un compte</button>
       </div>
     </div>
   </section>
