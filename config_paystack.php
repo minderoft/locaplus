@@ -11,4 +11,4 @@ define('PAYSTACK_SECRET_KEY', getenv('PAYSTACK_SECRET_KEY') ?: 'sk_test_33cc5e16
 
 // Clé publique (pour le frontend JavaScript)
 // Utilise la variable d'environnement PAYSTACK_PUBLIC_KEY si elle existe, sinon une clé de test locale.
-define('PAYSTACK_PUBLIC_KEY', getenv('PAYSTACK_PUBLIC_KEY') ?: 'pk_test_bbee9b48fb0d2223e4d8dd05359a319fc8f0bb23');
+define('PAYSTACK_PUBLIC_KEY', getenv('PAYSTACK_PUBLIC_KEY') ?: 'pk_test_bbee9b48fb0d2223e4d8dd05359a319fc8f0bb23'); 
